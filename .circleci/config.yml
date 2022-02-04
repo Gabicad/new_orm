@@ -15,7 +15,6 @@ jobs:
             ftp_host: $ftp_host
             ftp_password: $password
             ftp_username: username
-    working_directory: ~/repo
     steps:
       - checkout
       # install dependencies
