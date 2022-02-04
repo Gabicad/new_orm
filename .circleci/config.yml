@@ -14,7 +14,7 @@ jobs:
         environment:
             ftp_host: $ftp_host
             ftp_password: $password
-            ftp_username: username
+            ftp_username: $username
     steps:
       - checkout
       # install dependencies
