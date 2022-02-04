@@ -16,6 +16,11 @@ const config = {
   user: process.env.ftp_username
 };
 
+console.log(process.env.ftp_host);
+console.log(process.env.ftp_password);
+console.log(process.env.ftp_username);
+console.log(process.env);
+
 const ftpClient = new FtpClient();
 
 function createDirectory(destination) {
