@@ -9,3 +9,8 @@ export const sanctumConfig = {
   signOutRoute: 'logout',
   userObjectRoute: 'Users/2'
 };
+
+export const DataTableOptions = {
+  paginationRowsPerPageOptions: [20, 40, 50, 100, 200],
+  paginationPerPage: 50
+};

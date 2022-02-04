@@ -7,21 +7,38 @@ import { userService } from '../../services/api';
 import { FormikErrors } from 'formik';
 import { FormikEventKeys, FormikStore } from '../../store/formik';
 import { IDialogFormikProps } from '../../models/DialogFormik';
-import { UserStore, UserEventKeys } from '../../store/user';
+import { UserEventKeys, UserState, UserEvents } from '../../store/user';
+import { useEffect } from 'react';
+import { useStoreon } from 'storeon/react';
 
-const UserForm: React.FC<IDialogFormikProps> = ({ handleClose }: IDialogFormikProps) => {
+const UserForm: React.FC<IDialogFormikProps<IUser>> = ({
+  handleClose,
+  data = undefined
+}: IDialogFormikProps<IUser>) => {
+  const { dispatch } = useStoreon<UserState, UserEvents>('users');
   return (
     <Formik
-      initialValues={InitialUser}
+      initialValues={data ?? InitialUser}
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         FormikStore.dispatch(FormikEventKeys.DeleteErrorsEvent);
-        const data = await userService.saveUser(values);
+        let response;
         if (data === undefined) {
+          response = await userService.saveUser(values);
+        } else {
+          response = await userService.updateUser(values);
+        }
+
+        if (response === undefined || !response) {
           const errors = FormikStore.get();
           const formikErrors = errors.errors as FormikErrors<IUser>;
           setErrors(formikErrors);
         } else {
-          UserStore.dispatch(UserEventKeys.SaveUserEvent, values);
+          if (data === undefined) {
+            dispatch(UserEventKeys.SaveUserEvent, values);
+          } else {
+            dispatch(UserEventKeys.UpdateUserEvent, values);
+          }
+
           if (handleClose !== undefined) {
             handleClose();
           }
@@ -46,11 +63,6 @@ const UserForm: React.FC<IDialogFormikProps> = ({ handleClose }: IDialogFormikPr
             label="Password"
             name="password"
           />
-          <br />
-          <br />
-          <br />
-
-          {isSubmitting && <LinearProgress />}
           <br />
           <br />
           <br />

@@ -11,7 +11,9 @@ import {
   CheckCircleOutline,
   Done,
   Send,
-  ChangeCircle
+  Inventory2,
+  ChangeCircle,
+  FormatListBulleted
 } from '@mui/icons-material';
 export interface MenuItem {
   label: string;
@@ -29,7 +31,7 @@ export const menu: MenuItems = [
   },
   {
     label: 'Árajánlatok',
-    link: '#',
+    link: 'Offers',
     icon: LocalOffer,
     subMenu: [
       { label: 'Új árajánlat', link: '/offers/new', icon: Add },
@@ -42,8 +44,14 @@ export const menu: MenuItems = [
     ]
   },
   {
+    label: 'Termékek',
+    link: 'Products',
+    icon: Inventory2,
+    subMenu: [{ label: 'Termék lista', link: '/Products/List', icon: FormatListBulleted }]
+  },
+  {
     label: 'Beállítások',
-    link: '#',
+    link: 'Settings',
     icon: Settings,
     subMenu: [
       { label: 'Adminok', link: '/users', icon: AdminPanelSettings },

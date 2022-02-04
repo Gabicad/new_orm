@@ -55,7 +55,7 @@ export default class ApiClient implements IApiClient {
       const response = await this.client.put<TResponse>(path, payload);
       return response.data;
     } catch (error) {
-      //  handleServiceError(error);
+      handleServiceError(error);
     }
     return {} as TResponse;
   }

@@ -1,10 +1,10 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useRef, useState } from 'react';
 import { useStoreon } from 'storeon/react';
 import { IUser } from '../../models/User';
 import { UserState, UserEvents, UserEventKeys } from '../../store/user';
 import { DataList, IColumn } from '../../components/DataList';
-import { Button } from '@mui/material';
-import Dialog from '../../components/Dialog';
+import { Chip } from '@mui/material';
+import Dialog, { SimpleDialog } from '../../components/Dialog';
 import Userform from './form';
 import { IActionMenu, ActionMenu } from '../../components/TableActionMenu';
 import {
@@ -24,6 +24,8 @@ import {
 } from '@mui/icons-material';
 const user = () => {
   const { dispatch, users } = useStoreon<UserState, UserEvents>('users');
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [userEdit, setUserEdit] = useState<IUser | undefined>(undefined);
 
   useEffect(() => {
     dispatch(UserEventKeys.InitUsersEvent);
@@ -33,13 +35,17 @@ const user = () => {
     {
       title: 'Módosítás',
       icon: Settings,
-      onClick: (user: IUser) => console.log(user)
+      onClick: (item: IUser) => {
+        setOpenEdit(!openEdit);
+        setUserEdit(item);
+      }
+    },
+    {
+      title: 'Törlés',
+      icon: Done,
+      onClick: (item: IUser) => console.log(typeof item)
     }
   ];
-
-  const handleOnclick = (row: IUser) => {
-    console.log(row);
-  };
 
   const columns: IColumn<IUser>[] = [
     {
@@ -56,7 +62,11 @@ const user = () => {
     },
     {
       name: 'Telefon',
-      selector: (row: IUser) => row.phone
+      cell: (row: IUser) => {
+        const style = {};
+        const color = 'error';
+        return <Chip label={color} color={color} />;
+      }
     },
     {
       name: 'Létrehozva',
@@ -64,7 +74,7 @@ const user = () => {
     },
     {
       name: 'Művelet',
-      cell: (row: IUser) => <Button onClick={() => handleOnclick(row)}>asdf</Button>
+      cell: (row: IUser) => ActionMenu(row, ActionItems)
     }
   ];
 
@@ -76,6 +86,9 @@ const user = () => {
 
   return (
     <>
+      <Dialog buttonVisible={false} outsideOpener={openEdit} title="Módosítás">
+        <Userform data={userEdit}></Userform>
+      </Dialog>
       <DataList listData={users} columns={columns} headerActions={actions}></DataList>
     </>
   );

@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import { DialogContent } from '@mui/material';
+import { useEffect } from 'react';
 
 export interface ISimpleDialog {
   children: React.ReactNode;
@@ -15,9 +16,12 @@ export interface ISimpleDialogWithButton {
   children: React.ReactNode;
   buttonTitle?: string;
   title?: string;
+  defaultOpen?: boolean;
+  outsideOpener?: boolean;
+  buttonVisible?: boolean;
 }
 
-const SimpleDialog: React.FC<ISimpleDialog> = ({
+export const SimpleDialog: React.FC<ISimpleDialog> = ({
   children,
   open,
   title,
@@ -41,7 +45,10 @@ const SimpleDialog: React.FC<ISimpleDialog> = ({
 const SimpleDialogWithButton: React.FC<ISimpleDialogWithButton> = ({
   children,
   title,
-  buttonTitle
+  buttonTitle,
+  defaultOpen = false,
+  outsideOpener = false,
+  buttonVisible = true
 }: ISimpleDialogWithButton) => {
   const [open, setOpen] = React.useState(false);
   const handleClickOpen = () => {
@@ -50,7 +57,15 @@ const SimpleDialogWithButton: React.FC<ISimpleDialogWithButton> = ({
   const handleClose = () => {
     setOpen(false);
   };
+  const firstUpdate = React.useRef(true);
 
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+    setOpen(true);
+  }, [outsideOpener]);
   buttonTitle = buttonTitle ?? title;
 
   const childrenWithProps = React.Children.map(children, (child) => {
@@ -62,9 +77,11 @@ const SimpleDialogWithButton: React.FC<ISimpleDialogWithButton> = ({
 
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        {buttonTitle}
-      </Button>
+      {buttonVisible && (
+        <Button variant="outlined" onClick={handleClickOpen}>
+          {buttonTitle}
+        </Button>
+      )}
       <SimpleDialog onClose={handleClose} title={title} open={open}>
         {childrenWithProps}
       </SimpleDialog>

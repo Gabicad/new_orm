@@ -14,8 +14,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import MainListItems from './menu';
 
-import { useRef } from 'react';
-
 const drawerWidth = 240;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -34,7 +32,8 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
       duration: theme.transitions.duration.enteringScreen
     }),
     marginLeft: 0
-  })
+  }),
+  height: '100vh'
 }));
 
 interface AppBarProps extends MuiAppBarProps {

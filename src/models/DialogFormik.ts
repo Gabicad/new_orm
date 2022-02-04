@@ -1,3 +1,4 @@
-export interface IDialogFormikProps {
+export interface IDialogFormikProps<T> {
   handleClose?: () => void;
+  data?: T | undefined;
 }

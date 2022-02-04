@@ -3,14 +3,9 @@ import { styled, alpha } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Menu, { MenuProps } from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import EditIcon from '@mui/icons-material/Edit';
 import Divider from '@mui/material/Divider';
-import ArchiveIcon from '@mui/icons-material/Archive';
-import FileCopyIcon from '@mui/icons-material/FileCopy';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { SvgIconComponent } from '@mui/icons-material';
-import { IDataListProps } from '../DataList';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -51,7 +46,7 @@ const StyledMenu = styled((props: MenuProps) => (
 
 export interface IActionMenu<T> {
   title: string;
-  onClick?: (item: T) => void;
+  onClick: (item: T) => void;
   icon: SvgIconComponent;
 }
 
@@ -65,12 +60,13 @@ export function ActionMenu<T extends Record<string, any>>(data: T, config: IActi
     setAnchorEl(null);
   };
   const handleMenuItemClick = (onClick: (item: T) => void) => {
-    console.log(data);
+    onClick(data);
     setAnchorEl(null);
   };
   return (
     <div>
       <Button
+        size="small"
         id="demo-customized-button"
         aria-controls={open ? 'demo-customized-menu' : undefined}
         aria-haspopup="true"
@@ -79,7 +75,7 @@ export function ActionMenu<T extends Record<string, any>>(data: T, config: IActi
         disableElevation
         onClick={handleClick}
         endIcon={<KeyboardArrowDownIcon />}>
-        Options
+        Műveletek
       </Button>
       <StyledMenu
         id="demo-customized-menu"
