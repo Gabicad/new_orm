@@ -9,7 +9,8 @@
     "eject": "react-scripts eject",
     "lint": "eslint .",
     "lint:fix": "eslint --fix",
-    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+    "format": "prettier --write './**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
+    "ftp-deploy": "node deploy.js"
   },
   "dependencies": {
     "@emotion/react": "^11.7.1",
@@ -39,7 +40,9 @@
     "storeon": "^3.1.4",
     "styled-components": "^5.3.3",
     "typescript": "^4.5.4",
-    "web-vitals": "^2.1.2"
+    "web-vitals": "^2.1.2",
+    "ftp": "^0.3.10",
+    "glob": "^7.1.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.7.0",

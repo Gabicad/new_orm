@@ -1,6 +1,10 @@
-export const appConfig = {
+export const appConfigDev = {
   apiBaseUrl: 'http://localhost/api'
 };
+export const appConfigProd = {
+  apiBaseUrl: 'https://mgmbackend.biogames.hu/api'
+};
+export const appConfig = process.env.NODE_ENV === 'development' ? appConfigDev : appConfigProd;
 
 export const sanctumConfig = {
   apiUrl: appConfig.apiBaseUrl,
