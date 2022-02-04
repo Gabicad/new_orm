@@ -1,28 +1,27 @@
-version: 2
+version: 2.1
 jobs:
-  deploy:
+  build:
     docker:
-      - image: circleci/node:8-browsers
-
+      - image: circleci/node:10.16.3
     working_directory: ~/repo
-
     steps:
       - checkout
-      - run: npm install
+      # install dependencies
       - run:
-          name: Deploy Master Branch
-          command: |
-            sudo apt-get update
-            sudo apt-get -qq install git-ftp
-            echo "Deploying project ..."
-            git ftp push --user "${username}" --passwd "${password}" ${ftp_location}
-
-
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Build
+          command: npm run build
+      - run:
+          name: deploy
+          command: git ftp push --user "${username}" --passwd "${password}" ${ftp_location}
 workflows:
-  version: 2
   master-deploy:
     jobs:
-      - deploy:
+      - build
+          requires:
+            - build
           filters:
             branches:
               only: master
