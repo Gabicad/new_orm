@@ -12,14 +12,9 @@ const config = {
   // our FTP server as environemnt
   // variables for security reasons.
   host: process.env.ftp_host,
-  password: process.env.ftp_password,
-  user: process.env.ftp_username
+  password: process.env.password,
+  user: process.env.username
 };
-
-console.log(process.env.ftp_host);
-console.log(process.env.ftp_password);
-console.log(process.env.ftp_username);
-console.log(process.env);
 
 const ftpClient = new FtpClient();
 

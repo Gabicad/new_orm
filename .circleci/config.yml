@@ -11,10 +11,6 @@ jobs:
         auth:
           username: gabicad  # can specify string literal values
           password: $DOCKERHUB_PASSWORD  # or project environment variable reference
-        environment:
-            ftp_host: $ftp_host
-            ftp_password: $password
-            ftp_username: $username
     steps:
       - checkout
       # install dependencies
