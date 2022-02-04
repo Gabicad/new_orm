@@ -3,6 +3,7 @@ import { productService } from '../../services/api';
 import { ProductEventKeys, ProductEvents } from './product.events';
 import { ProductState } from './product.state';
 import { IProduct, IProductList } from '../../models/Product';
+import { getMaxId } from '../../libraries/utils';
 
 export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store) => {
   store.on('@init', () => ({ products: [] }));
@@ -11,7 +12,7 @@ export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store)
     try {
       let data = undefined;
       if (state.products.length > 0) {
-        const maxValueOfY = Math.max(...state.products.map((o: IProductList) => (o.id ? o.id : 0)));
+        const maxValueOfY = getMaxId<IProductList>(state.products);
         const lastId = await productService.getLastId();
         if (maxValueOfY !== lastId) {
           data = await productService.getAllProduct();
