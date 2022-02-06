@@ -94,9 +94,9 @@ const AppContentViewWrapper: React.FC = ({ children, ...rest }) => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="static" open={open}>
+      <AppBar position="fixed" open={open}>
         <Toolbar variant="dense">
           <IconButton
             color="inherit"

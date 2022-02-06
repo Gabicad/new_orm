@@ -13,7 +13,7 @@ export interface AuthEvents {
   setAccessToken: string;
   // `set` event which goes with number as data
   setAuthUser: IAuthUser;
-  Login: { username: string; password: string };
+  Login: IAuthUser;
 }
 
 export const AuthUserModule: StoreonModule<IAuthUser, AuthEvents> = (store) => {
@@ -29,19 +29,8 @@ export const AuthUserModule: StoreonModule<IAuthUser, AuthEvents> = (store) => {
   });
 
   store.on('Login', async (state, payload) => {
-    try {
-      const data = await userService.login({
-        username: payload.username,
-        password: payload.password
-      });
-      if (data !== undefined) {
-        console.log(data);
-        localStorage.setItem('token', data.accessToken);
-        store.dispatch('setAccessToken', data.accessToken);
-      }
-    } catch (e) {
-      console.error('Product Module Store InitProductsEvent');
-    }
+    localStorage.setItem('token', payload.accessToken);
+    store.dispatch('setAccessToken', payload.accessToken);
   });
   store.on('setAccessToken', (state, token: string) => ({ accessToken: token, loggedIn: true }));
   store.on('setAuthUser', (state, User) => User);
