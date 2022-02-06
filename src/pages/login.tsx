@@ -40,7 +40,6 @@ const Login = () => {
               { setSubmitting, setErrors }: FormikHelpers<ILogin>
             ) => {
               FormikStore.dispatch(FormikEventKeys.DeleteErrorsEvent);
-              console.log(values);
               const response = await userService.login(values);
 
               if (response === undefined || !response) {
