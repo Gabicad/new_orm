@@ -1,4 +1,4 @@
-import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { appConfig } from '../../../config/AppConfig';
 
 const axiosConfig: AxiosRequestConfig = {
@@ -12,6 +12,22 @@ const axiosConfig: AxiosRequestConfig = {
 
 const AxiosClient = Axios.create(axiosConfig);
 
+const requestHandler = (request: AxiosRequestConfig) => {
+  const state = localStorage.getItem('token');
+  request.headers = {
+    Authorization: `Bearer ${state}`
+  };
+  return request;
+};
+
+const errorHandler = (error: AxiosError) => {
+  return Promise.reject(error);
+};
+
+AxiosClient.interceptors.request.use(
+  (request) => requestHandler(request),
+  (error) => errorHandler(error)
+);
 /*
 // Step-2: Create request, response & error handlers
 const requestHandler = (request: AxiosRequestConfig) => {
