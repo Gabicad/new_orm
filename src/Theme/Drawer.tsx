@@ -16,6 +16,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import MainListItems from './menu';
+import { useStoreon } from 'storeon/react';
+import { AuthEvents, IAuthUser } from '../store/core/AuthStore';
 
 const drawerWidth = 240;
 
@@ -82,6 +84,7 @@ const AppContentViewWrapper: React.FC = ({ children, ...rest }) => {
   };
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { dispatch } = useStoreon<IAuthUser, AuthEvents>('loggedIn');
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {};
 
@@ -91,6 +94,9 @@ const AppContentViewWrapper: React.FC = ({ children, ...rest }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleLogout = () => {
+    dispatch('Logout');
   };
 
   return (
@@ -134,7 +140,7 @@ const AppContentViewWrapper: React.FC = ({ children, ...rest }) => {
               open={Boolean(anchorEl)}
               onClose={handleClose}>
               <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
+              <MenuItem onClick={handleLogout}>Kilépés</MenuItem>
             </Menu>
           </div>
         </Toolbar>
