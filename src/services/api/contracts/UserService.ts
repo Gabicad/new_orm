@@ -1,5 +1,5 @@
 import { IApiClient } from '../core/ApiClient';
-
+import { IAuthUser } from '../../../store/core/AuthStore';
 import { IUser } from '../../../models/User';
 
 export interface IUserApiClient {
@@ -7,6 +7,14 @@ export interface IUserApiClient {
   getLastId(): Promise<number | undefined>;
   saveUser(user: IUser): Promise<IUser | undefined>;
   updateUser(user: IUser): Promise<boolean | undefined>;
+  login({
+    username,
+    password
+  }: {
+    username: string;
+    password: string;
+  }): Promise<IAuthUser | undefined>;
+  logout(): Promise<boolean | undefined>;
 }
 
 export class UserApiClient implements IUserApiClient {
@@ -51,6 +59,36 @@ export class UserApiClient implements IUserApiClient {
       console.error(exception);
     }
   }
+  async login({
+    username,
+    password
+  }: {
+    username: string;
+    password: string;
+  }): Promise<IAuthUser | undefined> {
+    try {
+      const response = await this.UserApiClient.post<
+        { username: string; password: string },
+        IAuthUser
+      >(`/Auth/Login`, {
+        username: username,
+        password: password
+      });
+      return response.data ? response.data : undefined;
+    } catch (exception) {
+      console.error(exception);
+    }
+  }
+  async logout(): Promise<boolean | undefined> {
+    try {
+      const response = await this.UserApiClient.post<{ logout: boolean }, boolean>(`/Auth/Logout`, {
+        logout: true
+      });
+      return !!response;
+    } catch (exception) {
+      console.error(exception);
+    }
+  }
 }
 export default class UserService {
   UserApiClient: IUserApiClient;
@@ -71,6 +109,20 @@ export default class UserService {
   }
   async saveUser(user: IUser): Promise<IUser | undefined> {
     const response = await this.UserApiClient.saveUser(user);
+    return response;
+  }
+  async logout(): Promise<boolean | undefined> {
+    const response = await this.UserApiClient.logout();
+    return response;
+  }
+  async login({
+    username,
+    password
+  }: {
+    username: string;
+    password: string;
+  }): Promise<IAuthUser | undefined> {
+    const response = await this.UserApiClient.login({ username: username, password: password });
     return response;
   }
 }
