@@ -30,7 +30,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen
   }),
-  //marginLeft: `-${drawerWidth}px`,
+  marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
