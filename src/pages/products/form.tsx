@@ -8,22 +8,22 @@ import { IActionMenu, ActionMenu } from '../../components/TableActionMenu';
 import { Settings, Delete } from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
+import { useLocation, useParams } from 'react-router-dom';
 const products = () => {
   const { dispatch, products } = useStoreon<ProductState, ProductEvents>('products');
 
   const history = useNavigate();
-
+  let { id } = useParams();
+  console.log(id);
   useEffect(() => {
-    dispatch(ProductEventKeys.InitProductsEvent);
+    //dispatch(ProductEventKeys.InitProductsEvent);
   }, []);
 
   const ActionItems: IActionMenu<IProductList>[] = [
     {
       title: 'Módosítás',
       icon: Settings,
-      onClick: (item: IProductList) => {
-        history(`/Product/${item.id}`, { replace: true });
-      }
+      onClick: (item: IProductList) => {}
     },
     {
       title: 'Törlés',

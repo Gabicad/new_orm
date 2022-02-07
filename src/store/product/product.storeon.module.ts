@@ -5,6 +5,15 @@ import { ProductState } from './product.state';
 import { IProduct, IProductList } from '../../models/Product';
 import { getMaxId } from '../../libraries/utils';
 
+const getProductById = async (id: number) => {
+  try {
+    const data = await productService.getProduct(id);
+    return data ? data : undefined;
+  } catch (e) {
+    console.log('Product not found');
+  }
+};
+
 export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store) => {
   store.on('@init', () => ({ products: [] }));
 
@@ -28,7 +37,18 @@ export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store)
       console.error('Product Module Store InitProductsEvent');
     }
   });
-
+  store.on(ProductEventKeys.ClearStateEvent, (state) => ({
+    currentProduct: undefined
+  }));
+  store.on(ProductEventKeys.GetProductsEvent, async (state, product_id: number) => {
+    const product = await getProductById(product_id);
+    if (product !== undefined) {
+      store.dispatch(ProductEventKeys.LoadCurrentProductEvent, product);
+    }
+  });
+  store.on(ProductEventKeys.LoadCurrentProductEvent, (state, Product: IProduct) => ({
+    currentProduct: Product
+  }));
   store.on(ProductEventKeys.LoadProductsEvent, (state, Products: IProductList[]) => ({
     products: Products
   }));

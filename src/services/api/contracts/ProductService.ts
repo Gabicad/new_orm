@@ -6,6 +6,7 @@ export interface IProductApiClient {
   getAllProduct(): Promise<IProductList[] | undefined>;
   getLastId(): Promise<number | undefined>;
   saveProduct(product: IProduct): Promise<IProduct | undefined>;
+  getProduct(id: number): Promise<IProduct | undefined>;
   updateProduct(product: IProduct): Promise<boolean | undefined>;
 }
 
@@ -29,6 +30,14 @@ export class ProductApiClient implements IProductApiClient {
     try {
       const response = await this.ProductApiClient.post<IProduct, IProduct>(`/Products`, product);
       return response.data ? response.data : undefined;
+    } catch (exception) {
+      console.error(exception);
+    }
+  }
+  async getProduct(id: number): Promise<IProduct | undefined> {
+    try {
+      const response = await this.ProductApiClient.get<IProduct>(`/Products/${id}`);
+      return response ? response : undefined;
     } catch (exception) {
       console.error(exception);
     }
@@ -74,6 +83,10 @@ export default class ProductService {
   }
   async saveProduct(product: IProduct): Promise<IProduct | undefined> {
     const response = await this.ProductApiClient.saveProduct(product);
+    return response;
+  }
+  async getProduct(id: number): Promise<IProduct | undefined> {
+    const response = await this.ProductApiClient.getProduct(id);
     return response;
   }
 }

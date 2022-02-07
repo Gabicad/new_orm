@@ -5,11 +5,13 @@ const UserList = React.lazy(() => import('../pages/users/list'));
 const OfferNew = React.lazy(() => import('../pages/offers/new'));
 const UserForm = React.lazy(() => import('../pages/users/form'));
 const ProductList = React.lazy(() => import('../pages/products/list2'));
+const ProductView = React.lazy(() => import('../pages/products/view'));
 
 const Routing = () => {
   return (
     <React.Suspense fallback={<></>}>
       <Routes>
+        <Route path="product/view/:id" element={<ProductView />} />
         <Route path="products/list" element={<ProductList />} />
         <Route path="offers/new" element={<OfferNew />} />
         <Route path="users" element={<UserList />} />

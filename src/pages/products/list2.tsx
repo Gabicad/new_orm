@@ -6,10 +6,11 @@ import { IProductList } from '../../models/Product';
 import { GridColumns, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid';
 import { ActionMenu, IActionMenu } from '../../components/TableActionMenu';
 import { Delete, Edit, Pageview } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const products = () => {
   const { dispatch, products } = useStoreon<ProductState, ProductEvents>('products');
-
+  const history = useNavigate();
   useEffect(() => {
     dispatch(ProductEventKeys.InitProductsEvent);
   }, []);
@@ -18,7 +19,9 @@ const products = () => {
     {
       title: 'Adatlap',
       icon: Pageview,
-      onClick: (item: IProductList) => {}
+      onClick: (item: IProductList) => {
+        history(`/Product/view/${item.id}`, { replace: true });
+      }
     },
     {
       title: 'Módosítás',
