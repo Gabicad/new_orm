@@ -1,36 +1,91 @@
 import React from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import { userService } from '../services/api';
 import { useStoreon } from 'storeon/react';
 import { AuthEvents, IAuthUser } from '../store/core/AuthStore';
+import { Grid, Paper, Avatar, Button, Typography, Link } from '@mui/material';
+import LockOutlined from '@mui/icons-material/LockOutlined';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { Field, Form, Formik, FormikErrors, FormikHelpers } from 'formik';
+import { TextField } from 'formik-mui';
+import { InitialUser, IUser } from '../models/User';
+import { FormikEventKeys, FormikStore } from '../store/formik';
+import { UserEventKeys } from '../store/user';
+import { Simulate } from 'react-dom/test-utils';
+interface ILogin {
+  username: string;
+  password: string;
+}
+
 const Login = () => {
-  const [username, setUsername] = React.useState<string>('');
-  const [password, setPassword] = React.useState<string>('');
-  const { dispatch } = useStoreon<IAuthUser, AuthEvents>('loggedIn');
-  // @ts-ignore
-  const handleChange = (e) => {
-    setUsername(e.currentTarget.value);
-  };
+  const { dispatch, loggedIn } = useStoreon<IAuthUser, AuthEvents>('loggedIn');
 
-  // @ts-ignore
-  const handleChangePass = (e) => {
-    setPassword(e.currentTarget.value);
-  };
-  const login = async () => {
-    dispatch('Login', { username: username, password: password });
-  };
-
+  const paperStyle = { padding: 20, height: '60vh', width: 280, margin: '20px auto' };
+  const avatarStyle = { backgroundColor: '#1bbd7e' };
+  const btnStyle = { margin: '8px 0' };
   return (
     <div className="App">
-      <form className="form">
-        <TextField id="email" onChange={handleChange} type="text" />
-        <TextField id="password" onChange={handleChangePass} type="password" />
+      <Grid>
+        <Paper elevation={10} style={paperStyle}>
+          <Grid alignItems="center" justifyContent="center" alignContent="center">
+            <Avatar style={avatarStyle}>
+              <LockOutlined />
+            </Avatar>
+            <h2>Belépés</h2>
+          </Grid>
+          <Formik
+            initialValues={{ username: '', password: '' }}
+            onSubmit={async (
+              values: ILogin,
+              { setSubmitting, setErrors }: FormikHelpers<ILogin>
+            ) => {
+              FormikStore.dispatch(FormikEventKeys.DeleteErrorsEvent);
+              const response = await userService.login(values);
 
-        <Button type="button" color="primary" onClick={login} className="form__custom-button">
-          Log in
-        </Button>
-      </form>
+              if (response === undefined || !response) {
+                const errors = FormikStore.get();
+                const formikErrors = errors.errors as FormikErrors<ILogin>;
+                setErrors(formikErrors);
+              } else {
+                dispatch('Login', response);
+              }
+              setSubmitting(false);
+            }}>
+            {({ isSubmitting }) => (
+              <Form>
+                <Field
+                  id="username"
+                  className="m-2"
+                  component={TextField}
+                  name="username"
+                  type="text"
+                  label="username"
+                  fullWidth
+                />
+                <Field
+                  id="password"
+                  className="m-2"
+                  component={TextField}
+                  type="password"
+                  label="Jelszó"
+                  name="password"
+                  fullWidth
+                />
+
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  style={btnStyle}
+                  disabled={isSubmitting}
+                  fullWidth>
+                  Belépés
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </Paper>
+      </Grid>
     </div>
   );
 };

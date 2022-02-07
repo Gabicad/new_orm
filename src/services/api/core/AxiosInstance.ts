@@ -14,9 +14,10 @@ const AxiosClient = Axios.create(axiosConfig);
 
 const requestHandler = (request: AxiosRequestConfig) => {
   const state = localStorage.getItem('token');
-  request.headers = {
-    Authorization: `Bearer ${state}`
-  };
+  if (state)
+    request.headers = {
+      Authorization: `Bearer ${state}`
+    };
   return request;
 };
 

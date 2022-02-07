@@ -5,13 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { StoreContext } from 'storeon/react';
-
+import CustomSnackbar from './libraries/CustomSnackBar';
 import { AppStore } from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
 ReactDOM.render(
   <React.StrictMode>
     <StoreContext.Provider value={AppStore}>
       <BrowserRouter>
+        <CustomSnackbar />
         <App />
       </BrowserRouter>
     </StoreContext.Provider>
