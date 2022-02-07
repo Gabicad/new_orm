@@ -32,7 +32,7 @@ const productView = () => {
         Termék Adatlap
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <List dense>
             <ListItem>
               <ListItemText primary="Azonosító" secondary={currentProduct.id} />
@@ -51,7 +51,7 @@ const productView = () => {
             </ListItem>
           </List>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <List dense>
             {currentProduct.product_features.map((feature: IProductFeature) => {
               return (
@@ -62,7 +62,7 @@ const productView = () => {
             })}
           </List>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <ImageList sx={{ width: 300, height: 'auto' }} cols={3} rowHeight={164}>
             {currentProduct.product_images.map((item: IProductImages) => {
               return (
