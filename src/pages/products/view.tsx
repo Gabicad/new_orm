@@ -47,7 +47,7 @@ const productView = () => {
               <ListItemText primary="price" secondary={currentProduct.price} />
             </ListItem>
             <ListItem>
-              <ListItemText primary="manufacturer" secondary={currentProduct.manufacturer.name} />
+              <ListItemText primary="manufacturer" secondary={currentProduct.manufacturer?.name} />
             </ListItem>
           </List>
         </Grid>
