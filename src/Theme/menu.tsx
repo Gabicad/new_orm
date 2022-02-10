@@ -15,7 +15,7 @@ const MainListItems = () => {
   const location = useLocation();
   const [MenuState, setMenuState] = React.useState({ link: location.pathname });
 
-  const handleRouteClick = (link: string) => history(link, { replace: true });
+  const handleRouteClick = (link: string) => history(link);
 
   const handleOnClick = (menu: MenuItem) => {
     if (menu.subMenu) {

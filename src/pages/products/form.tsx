@@ -1,81 +1,110 @@
-import React, { useEffect } from 'react';
+import { Button, Grid, Typography } from '@mui/material';
+import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik';
+import { TextField } from 'formik-mui';
+import * as React from 'react';
+import { IUser, InitialUser } from '../../models/User';
+import { userService } from '../../services/api';
+import { FormikErrors } from 'formik';
+import { FormikEventKeys, FormikStore } from '../../store/formik';
+import { IDialogFormikProps } from '../../models/DialogFormik';
+import { UserEventKeys, UserState, UserEvents } from '../../store/user';
+import { useEffect } from 'react';
 import { useStoreon } from 'storeon/react';
-import { IProductList } from '../../models/Product';
-import { ProductState, ProductEvents, ProductEventKeys } from '../../store/product';
-import { DataList, IColumn } from '../../components/DataList';
-import { useNavigate } from 'react-router-dom';
-import { IActionMenu, ActionMenu } from '../../components/TableActionMenu';
-import { Settings, Delete } from '@mui/icons-material';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
-import { useLocation, useParams } from 'react-router-dom';
-const products = () => {
-  const { dispatch, products } = useStoreon<ProductState, ProductEvents>('products');
+import { AddCircle, Edit } from '@mui/icons-material';
 
-  const history = useNavigate();
-  let { id } = useParams();
-  console.log(id);
-  useEffect(() => {
-    //dispatch(ProductEventKeys.InitProductsEvent);
-  }, []);
-
-  const ActionItems: IActionMenu<IProductList>[] = [
-    {
-      title: 'Módosítás',
-      icon: Settings,
-      onClick: (item: IProductList) => {}
-    },
-    {
-      title: 'Törlés',
-      icon: Delete,
-      onClick: (item: IProductList) => console.log(typeof item)
-    }
-  ];
-
-  const columns: IColumn<IProductList>[] = [
-    {
-      name: 'ID',
-      selector: (row: IProductList) => row.id
-    },
-    {
-      name: 'Termék Neve',
-      selector: (row: IProductList) => row.name
-    },
-    {
-      name: 'Gyártó',
-      selector: (row: IProductList) => row.manufacturer.name
-    },
-    {
-      name: 'Ár',
-      selector: (row: IProductList) => row.price
-    },
-    {
-      name: 'Active',
-      cell: (row: IProductList) => (
-        <Chip
-          size="small"
-          label={row.active ? 'Igen' : 'Nem'}
-          color={row.active ? 'success' : 'error'}
-        />
-      )
-    },
-    {
-      name: 'Művelet',
-      cell: (row: IProductList) => ActionMenu(row, ActionItems)
-    }
-  ];
-
-  const actions = (
-    <Button variant="outlined" onClick={() => history('/Products/New', { replace: true })}>
-      Új termék
-    </Button>
-  );
-
+const UserForm: React.FC<IDialogFormikProps<IUser>> = ({
+  handleClose,
+  data = undefined
+}: IDialogFormikProps<IUser>) => {
+  const { dispatch } = useStoreon<UserState, UserEvents>('users');
   return (
     <>
-      <DataList listData={products} columns={columns} headerActions={actions}></DataList>
+      <Grid container spacing={2} direction="row">
+        <Grid item>
+          <Typography variant="h1" component="div" gutterBottom>
+            Új termék
+          </Typography>
+        </Grid>
+      </Grid>
+
+      <br />
+      <Formik
+        initialValues={data ?? InitialUser}
+        onSubmit={async (values, { setSubmitting, setErrors }) => {
+          FormikStore.dispatch(FormikEventKeys.DeleteErrorsEvent);
+          let response;
+          if (data === undefined) {
+            response = await userService.saveUser(values);
+          } else {
+            response = await userService.updateUser(values);
+          }
+
+          if (response === undefined || !response) {
+            const errors = FormikStore.get();
+            const formikErrors = errors.errors as FormikErrors<IUser>;
+            setErrors(formikErrors);
+          } else {
+            if (data === undefined) {
+              dispatch(UserEventKeys.SaveUserEvent, values);
+            } else {
+              dispatch(UserEventKeys.UpdateUserEvent, values);
+            }
+
+            if (handleClose !== undefined) {
+              handleClose();
+            }
+          }
+        }}>
+        {({ submitForm, isSubmitting }) => (
+          <Form>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={4}>
+                <Field
+                  fullWidth
+                  className="m-2"
+                  component={TextField}
+                  name="name"
+                  type="text"
+                  label="Termék neve"
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Field
+                  fullWidth
+                  className="m-2"
+                  component={TextField}
+                  name="reference"
+                  type="text"
+                  label="Cikkszám"
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <Field
+                  fullWidth
+                  className="m-2"
+                  component={TextField}
+                  name="phone"
+                  type="text"
+                  label="Telefon"
+                />
+
+                <br />
+                <br />
+                <br />
+                <br />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  disabled={isSubmitting}
+                  onClick={submitForm}>
+                  Mentés
+                </Button>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
     </>
   );
 };
-
-export default products;
+export default UserForm;

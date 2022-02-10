@@ -14,7 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
+import { useLocation } from 'react-router-dom';
 import MainListItems from './menu';
 import { useStoreon } from 'storeon/react';
 import { AuthEvents, IAuthUser } from '../store/core/AuthStore';
@@ -30,7 +30,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen
   }),
-  marginLeft: `-${drawerWidth}px`,
+  // marginLeft: `-${drawerWidth}px`,
   ...(open && {
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
@@ -99,10 +99,16 @@ const AppContentViewWrapper: React.FC = ({ children, ...rest }) => {
     dispatch('Logout');
   };
 
+  const location = useLocation();
+  React.useEffect(() => {
+    setOpen(false);
+  }, [location]);
+
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'fixed' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+
+      <AppBar position="fixed">
         <Toolbar variant="dense">
           <IconButton
             color="inherit"
@@ -145,6 +151,7 @@ const AppContentViewWrapper: React.FC = ({ children, ...rest }) => {
           </div>
         </Toolbar>
       </AppBar>
+
       <Drawer
         sx={{
           width: drawerWidth,
@@ -154,7 +161,7 @@ const AppContentViewWrapper: React.FC = ({ children, ...rest }) => {
             boxSizing: 'border-box'
           }
         }}
-        variant="persistent"
+        onClose={() => setOpen(false)}
         anchor="left"
         open={open}>
         <DrawerHeader>
@@ -165,7 +172,8 @@ const AppContentViewWrapper: React.FC = ({ children, ...rest }) => {
         <Divider />
         <MainListItems />
       </Drawer>
-      <Main open={open}>{children}</Main>
+
+      <Main>{children}</Main>
     </Box>
   );
 };

@@ -1,18 +1,20 @@
+import { IUser } from './User';
+
 export interface IProductList {
-  id: number;
+  id: number | undefined;
   name: string;
   active: boolean;
-  manufacturer: IManufacturer;
-  product_features: IProductFeature[];
-  product_images: IProductImages[];
+  manufacturer?: IManufacturer;
+  product_features?: IProductFeature[];
+  product_images?: IProductImages[];
   price: number;
-  created_at: Date;
-  modified_at: Date;
+  created_at?: Date;
+  modified_at?: Date;
 }
 
 export interface IProduct extends IProductList {
-  description: string;
-  description_short: string;
+  description?: string;
+  description_short?: string;
 }
 
 export interface IProductFeature {
@@ -33,3 +35,15 @@ export interface IManufacturer {
   short: string;
   alias: string;
 }
+
+export const InitialProduct: IProduct = {
+  id: undefined,
+  description: undefined,
+  description_short: undefined,
+  name: '',
+  active: true,
+  manufacturer: undefined,
+  product_features: undefined,
+  product_images: undefined,
+  price: 0
+};

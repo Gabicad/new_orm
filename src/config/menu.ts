@@ -4,7 +4,7 @@ import {
   AdminPanelSettings,
   Settings,
   PrecisionManufacturing,
-  LocalOffer,
+  People,
   Add,
   Delete,
   DoNotDisturb,
@@ -29,7 +29,7 @@ export const menu: MenuItems = [
     link: '/Dashboard',
     icon: Dashboard
   },
-  {
+  /*{
     label: 'Árajánlatok',
     link: 'Offers',
     icon: LocalOffer,
@@ -42,12 +42,17 @@ export const menu: MenuItems = [
       { label: 'Megrendelve', link: '/offers/list', icon: CheckCircleOutline },
       { label: 'Törölve', link: '/offers/list', icon: Delete }
     ]
-  },
+  },*/
   {
     label: 'Termékek',
     link: 'Products',
     icon: Inventory2,
     subMenu: [{ label: 'Termék lista', link: '/Products/List', icon: FormatListBulleted }]
+  },
+  {
+    label: 'Ügyfelek',
+    link: '/Customers',
+    icon: People
   },
   {
     label: 'Beállítások',
