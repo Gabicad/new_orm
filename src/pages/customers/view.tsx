@@ -140,10 +140,10 @@ const customerView = () => {
       <PageBar item={currentCustomer} pageProps={pageBar} />
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
+          <Typography p={2} variant="h3" component="div" gutterBottom>
+            Alap adatok
+          </Typography>
           <Paper>
-            <Typography p={2} variant="h3" component="div" gutterBottom>
-              Alap adatok
-            </Typography>
             <InlineList dense>
               <InlineListItem>
                 <ListItemText primary="Azonosító" secondary={currentCustomer.id} />
