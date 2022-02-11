@@ -5,8 +5,10 @@ import DataGird from '../../components/DataGrid';
 import { ICustomerList } from '../../models/Customer';
 import { GridColumns, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid';
 import { ActionMenu, IActionMenu } from '../../components/TableActionMenu';
-import { Delete, Edit, Pageview } from '@mui/icons-material';
+import { AddCircle, Delete, Edit, Pageview } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import PageBar, { IPageBar } from '../../components/PageBar';
+import { IProduct } from '../../models/Product';
 
 const customers = () => {
   const { dispatch, customers } = useStoreon<CustomerState, CustomerEvents>('customers');
@@ -51,8 +53,23 @@ const customers = () => {
         ActionMenu(params.row, ActionItems)
     }
   ];
+
+  const pageBar: IPageBar<IProduct> = {
+    title: 'Ügyfelek',
+    buttons: [
+      {
+        icon: AddCircle,
+        title: 'Új ügyfél',
+        color: 'primary',
+        onClick: () => {
+          history(`/Product/new`);
+        }
+      }
+    ]
+  };
   return (
     <>
+      <PageBar pageProps={pageBar} />
       <DataGird listData={customers} columns={columns}></DataGird>
     </>
   );

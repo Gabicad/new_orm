@@ -11,13 +11,15 @@ import {
   Typography,
   ImageListItem,
   ImageList,
-  Button
+  Button,
+  Divider
 } from '@mui/material';
 import { InlineList, InlineListItem } from './../../libraries/InlineList';
-
+import parse from 'html-react-parser';
 import { Edit, AddCircle } from '@mui/icons-material';
 import { IProduct, IProductFeature, IProductImages } from '../../models/Product';
 import { getImageSrc } from '../../libraries/ImageSrc';
+import PageBar, { IPageBar } from '../../components/PageBar';
 
 const productView = () => {
   const { dispatch, currentProduct } = useStoreon<ProductState, ProductEvents>('currentProduct');
@@ -32,36 +34,32 @@ const productView = () => {
   if (currentProduct === undefined) {
     return <></>;
   }
+
+  const pageBar: IPageBar<IProduct> = {
+    title: 'Termék adatlap',
+    buttons: [
+      {
+        icon: AddCircle,
+        title: 'Új termék',
+        color: 'primary',
+        onClick: () => {
+          history(`/Product/new`);
+        }
+      },
+      {
+        icon: Edit,
+        title: 'Módosítás',
+        color: 'warning',
+        onClick: (item: IProduct | undefined) => {
+          history(`/Product/edit/${item?.id}`);
+        }
+      }
+    ]
+  };
+
   return (
     <>
-      <Grid container spacing={2} direction="row" sx={{ mb: 5 }}>
-        <Grid item>
-          <Typography variant="h1" component="div" gutterBottom>
-            Termék Adatlap
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            onClick={() => {
-              history(`/Product/new`);
-            }}
-            variant="outlined"
-            sx={{ mr: 2 }}
-            startIcon={<AddCircle />}>
-            Új termék
-          </Button>
-          <Button
-            onClick={() => {
-              history(`/Product/edit/${id}`);
-            }}
-            variant="outlined"
-            color="warning"
-            startIcon={<Edit />}>
-            Módosítás
-          </Button>
-        </Grid>
-      </Grid>
-
+      <PageBar item={currentProduct} pageProps={pageBar} />
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <Grid item xs={12} md={12}>
@@ -82,6 +80,7 @@ const productView = () => {
                 <ListItemText primary="Gyártó" secondary={currentProduct.manufacturer?.name} />
               </InlineListItem>
             </InlineList>
+            <Divider />
           </Grid>
           <Grid item xs={12} md={12}>
             <InlineList dense>
@@ -94,14 +93,44 @@ const productView = () => {
                   );
                 })}
             </InlineList>
+            <Divider />
           </Grid>
-          <Grid item xs={12} md={12}>
-            <InlineList dense>
-              <InlineListItem>
-                <ListItemText primary="Leírás" secondary={currentProduct.description} />
-              </InlineListItem>
-            </InlineList>
-          </Grid>
+          {currentProduct.description_short && (
+            <Grid item xs={12} md={12}>
+              <InlineList dense>
+                <InlineListItem>
+                  <ListItemText
+                    primary="Rövid leírás"
+                    secondaryTypographyProps={{
+                      style: {
+                        whiteSpace: 'break-spaces'
+                      }
+                    }}
+                    secondary={parse(currentProduct.description_short)}
+                  />
+                </InlineListItem>
+              </InlineList>
+              <Divider />
+            </Grid>
+          )}
+          {currentProduct.description && (
+            <Grid item xs={12} md={12}>
+              <InlineList dense>
+                <InlineListItem>
+                  <ListItemText
+                    secondaryTypographyProps={{
+                      style: {
+                        whiteSpace: 'break-spaces'
+                      }
+                    }}
+                    primary="Leírás"
+                    secondary={parse(currentProduct.description)}
+                  />
+                </InlineListItem>
+              </InlineList>
+              <Divider />
+            </Grid>
+          )}
         </Grid>
 
         <Grid item xs={12} md={6} sx={{ minHeight: '200px' }}>

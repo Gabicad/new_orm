@@ -12,6 +12,8 @@ export interface ICustomer {
   created_at?: Date | null;
   modified_at?: Date | null;
   deleted_at?: Date | null;
+  invoice_addresses?: IInvoiceAddress[];
+  ship_addresses?: IInvoiceAddress[];
 }
 
 export interface ICustomerList {

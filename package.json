@@ -34,6 +34,7 @@
     "formik-mui": "^4.0.0-alpha.3",
     "ftp": "^0.3.10",
     "glob": "^7.1.2",
+    "html-react-parser": "^1.4.8",
     "nanostores": "^0.5.8",
     "react": "^17.0.2",
     "react-bootstrap": "^2.1.1",

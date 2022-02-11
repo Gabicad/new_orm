@@ -2,11 +2,12 @@ import React, { useEffect } from 'react';
 import { useStoreon } from 'storeon/react';
 import { ProductState, ProductEvents, ProductEventKeys } from '../../store/product';
 import DataGird from '../../components/DataGrid';
-import { IProductList } from '../../models/Product';
+import { IProduct, IProductList } from '../../models/Product';
 import { GridColumns, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid';
 import { ActionMenu, IActionMenu } from '../../components/TableActionMenu';
-import { Delete, Edit, Pageview } from '@mui/icons-material';
+import { AddCircle, Delete, Edit, Pageview } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import PageBar, { IPageBar } from '../../components/PageBar';
 
 const products = () => {
   const { dispatch, products } = useStoreon<ProductState, ProductEvents>('products');
@@ -56,8 +57,24 @@ const products = () => {
         ActionMenu(params.row, ActionItems)
     }
   ];
+
+  const pageBar: IPageBar<IProduct> = {
+    title: 'Új termék',
+    buttons: [
+      {
+        icon: AddCircle,
+        title: 'Új termék',
+        color: 'primary',
+        onClick: () => {
+          history(`/Product/new`);
+        }
+      }
+    ]
+  };
+
   return (
     <>
+      <PageBar pageProps={pageBar} />
       <DataGird listData={products} columns={columns}></DataGird>
     </>
   );

@@ -8,12 +8,14 @@ const ProductList = React.lazy(() => import('../pages/products/list2'));
 const ProductView = React.lazy(() => import('../pages/products/view'));
 const ProductForm = React.lazy(() => import('../pages/products/form'));
 const CustomersList = React.lazy(() => import('../pages/customers/list'));
+const CustomersView = React.lazy(() => import('../pages/customers/view'));
 
 const Routing = () => {
   return (
     <React.Suspense fallback={<></>}>
       <Routes>
         <Route path="Customers" element={<CustomersList />} />
+        <Route path="Customer/view/:id" element={<CustomersView />} />
         <Route path="product/view/:id" element={<ProductView />} />
         <Route path="product/edit/:id" element={<ProductForm />} />
         <Route path="product/new" element={<ProductForm />} />

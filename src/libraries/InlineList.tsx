@@ -9,5 +9,7 @@ export const InlineList = styled(List)({
 
 export const InlineListItem = styled(ListItem)({
   float: 'left',
-  width: 'auto'
+  width: 'auto',
+  whiteSpace: 'nowrap',
+  minHeight: 60
 });

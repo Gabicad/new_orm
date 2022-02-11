@@ -6,6 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { SvgIconComponent } from '@mui/icons-material';
+import { IconList } from './IconList';
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -43,14 +44,21 @@ const StyledMenu = styled((props: MenuProps) => (
     }
   }
 }));
-
+enum Modes {
+  Icon = 0,
+  List = 1
+}
 export interface IActionMenu<T> {
   title: string;
   onClick: (item: T) => void;
   icon: SvgIconComponent;
 }
 
-export function ActionMenu<T extends Record<string, any>>(data: T, config: IActionMenu<T>[]) {
+export function ActionMenu<T extends Record<string, any>>(
+  data: T,
+  config: IActionMenu<T>[],
+  mode = Modes.Icon
+) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -63,6 +71,11 @@ export function ActionMenu<T extends Record<string, any>>(data: T, config: IActi
     onClick(data);
     setAnchorEl(null);
   };
+
+  if (mode === Modes.Icon) {
+    return <IconList data={data} config={config} />;
+  }
+
   return (
     <div>
       <Button
