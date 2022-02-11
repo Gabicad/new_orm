@@ -21,7 +21,7 @@ const products = () => {
       title: 'Adatlap',
       icon: Pageview,
       onClick: (item: IProductList) => {
-        history(`/Product/view/${item.id}`, { replace: true });
+        history(`/Product/view/${item.id}`);
       }
     },
     {

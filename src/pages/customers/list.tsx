@@ -22,7 +22,7 @@ const customers = () => {
       title: 'Adatlap',
       icon: Pageview,
       onClick: (item: ICustomerList) => {
-        history(`/Customer/view/${item.id}`, { replace: true });
+        history(`/Customer/view/${item.id}`);
       }
     },
     {

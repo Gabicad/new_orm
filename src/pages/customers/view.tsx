@@ -71,13 +71,14 @@ const customerView = () => {
       value: 'full_name'
     },
     {
-      title: 'Város',
-      value: 'city'
-    },
-    {
       title: 'Irszám',
       value: 'zipcode'
     },
+    {
+      title: 'Város',
+      value: 'city'
+    },
+
     {
       title: 'Cím',
       value: 'address'
@@ -105,13 +106,14 @@ const customerView = () => {
       value: 'full_name'
     },
     {
-      title: 'Város',
-      value: 'city'
-    },
-    {
       title: 'Irszám',
       value: 'zipcode'
     },
+    {
+      title: 'Város',
+      value: 'city'
+    },
+
     {
       title: 'Cím',
       value: 'address'
