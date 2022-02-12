@@ -11,12 +11,14 @@ import {
   Typography,
   ImageListItem,
   ImageList,
-  Button,
-  Divider
+  Divider,
+  ImageListItemBar,
+  IconButton,
+  Icon
 } from '@mui/material';
 import { InlineList, InlineListItem } from './../../libraries/InlineList';
 import parse from 'html-react-parser';
-import { Edit, AddCircle } from '@mui/icons-material';
+import { Edit, AddCircle, DeleteForever } from '@mui/icons-material';
 import { IProduct, IProductFeature, IProductImages } from '../../models/Product';
 import { getImageSrc } from '../../libraries/ImageSrc';
 import PageBar, { IPageBar } from '../../components/PageBar';
@@ -55,6 +57,10 @@ const productView = () => {
         }
       }
     ]
+  };
+
+  const handleDelete = async (item: IProductImages) => {
+    dispatch(ProductEventKeys.DeleteProductImageEvent, item.id);
   };
 
   return (
@@ -140,6 +146,15 @@ const productView = () => {
                 return (
                   <ImageListItem key={item.id}>
                     <img src={getImageSrc(item)} srcSet={getImageSrc(item)} loading="lazy" />
+                    <ImageListItemBar
+                      actionIcon={
+                        <IconButton
+                          onClick={() => handleDelete(item)}
+                          sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
+                          <Icon>DeleteForever</Icon>
+                        </IconButton>
+                      }
+                    />
                   </ImageListItem>
                 );
               })}

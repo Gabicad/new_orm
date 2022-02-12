@@ -6,6 +6,7 @@ export const UpdateProductEvent = Symbol(`UpdateProductEvent`);
 export const GetProductsEvent = Symbol(`GetProductsEvent`);
 export const LoadCurrentProductEvent = Symbol(`LoadCurrentProductEvent`);
 export const ClearStateEvent = Symbol(`ClearStateEvent`);
+export const DeleteProductImageEvent = Symbol(`DeleteProductImageEvent`);
 
 export const ProductEventKeys = {
   GetProductsEvent,
@@ -14,7 +15,8 @@ export const ProductEventKeys = {
   SaveProductEvent,
   UpdateProductEvent,
   LoadProductsEvent,
-  LoadCurrentProductEvent
+  LoadCurrentProductEvent,
+  DeleteProductImageEvent
 } as const;
 
 export interface ProductEvents {
@@ -25,4 +27,5 @@ export interface ProductEvents {
   [LoadCurrentProductEvent]: IProduct;
   [LoadProductsEvent]: IProductList[];
   [UpdateProductEvent]: IProduct;
+  [DeleteProductImageEvent]: number;
 }

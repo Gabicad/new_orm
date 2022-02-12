@@ -17,6 +17,14 @@ const getProductById = async (id: number) => {
 export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store) => {
   store.on('@init', () => ({ products: [] }));
 
+  store.on(ProductEventKeys.DeleteProductImageEvent, async (state, id: number) => {
+    try {
+      await productService.deleteImage(id);
+    } catch (e) {
+      console.error('Product Module Store InitProductsEvent');
+    }
+  });
+
   store.on(ProductEventKeys.InitProductsEvent, async (state) => {
     try {
       let data = undefined;
