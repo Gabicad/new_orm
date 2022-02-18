@@ -41,9 +41,9 @@ export const CustomerModule: StoreonModule<CustomerState, CustomerEvents> = (sto
     currentCustomer: undefined
   }));
   store.on(CustomerEventKeys.GetCustomerEvent, async (state, customer_id: number) => {
-    const product = await getCustomerById(customer_id);
-    if (product !== undefined) {
-      store.dispatch(CustomerEventKeys.LoadCurrentCustomerEvent, product);
+    const customer = await getCustomerById(customer_id);
+    if (customer !== undefined) {
+      store.dispatch(CustomerEventKeys.LoadCurrentCustomerEvent, customer);
     }
   });
   store.on(CustomerEventKeys.LoadCurrentCustomerEvent, (state, Customer: ICustomer) => ({

@@ -1,53 +1,62 @@
-import { Button, Grid, Typography } from '@mui/material';
-import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik';
-import { TextField } from 'formik-mui';
+import {
+  AutocompleteRenderInputParams,
+  Button,
+  Divider,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material';
+import { TextField as TextFieldMUI } from '@mui/material';
+import { Formik, Form, Field } from 'formik';
+import { TextField, Autocomplete } from 'formik-mui';
 import * as React from 'react';
-import { IUser, InitialUser } from '../../models/User';
-import { userService } from '../../services/api';
+import { productService } from '../../services/api';
 import { FormikErrors } from 'formik';
 import { FormikEventKeys, FormikStore } from '../../store/formik';
 import { IDialogFormikProps } from '../../models/DialogFormik';
-import { UserEventKeys, UserState, UserEvents } from '../../store/user';
-import { useEffect } from 'react';
 import { useStoreon } from 'storeon/react';
-import { AddCircle, Edit } from '@mui/icons-material';
+import { InitialProduct, IProduct } from 'models/Product';
+import { ProductEventKeys, ProductEvents, ProductState } from 'store/product';
+import { useEffect } from 'react';
 
-const UserForm: React.FC<IDialogFormikProps<IUser>> = ({
+const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
   handleClose,
   data = undefined
-}: IDialogFormikProps<IUser>) => {
-  const { dispatch } = useStoreon<UserState, UserEvents>('users');
+}: IDialogFormikProps<IProduct>) => {
+  const { dispatch, manufacturers } = useStoreon<ProductState, ProductEvents>('manufacturers');
+
+  useEffect(() => {
+    dispatch(ProductEventKeys.GetAllManufacturersEvent);
+  }, []);
+
   return (
     <>
-      <Grid container spacing={2} direction="row">
-        <Grid item>
-          <Typography variant="h1" component="div" gutterBottom>
-            Új termék
-          </Typography>
-        </Grid>
-      </Grid>
-
-      <br />
       <Formik
-        initialValues={data ?? InitialUser}
+        initialValues={data ?? InitialProduct}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
           FormikStore.dispatch(FormikEventKeys.DeleteErrorsEvent);
           let response;
           if (data === undefined) {
-            response = await userService.saveUser(values);
+            // response = await userService.saveUser(values);
           } else {
-            response = await userService.updateUser(values);
+            //response = await userService.updateUser(values);
           }
 
           if (response === undefined || !response) {
             const errors = FormikStore.get();
-            const formikErrors = errors.errors as FormikErrors<IUser>;
+            const formikErrors = errors.errors as FormikErrors<IProduct>;
             setErrors(formikErrors);
           } else {
             if (data === undefined) {
-              dispatch(UserEventKeys.SaveUserEvent, values);
+              //  dispatch(UserEventKeys.SaveUserEvent, values);
             } else {
-              dispatch(UserEventKeys.UpdateUserEvent, values);
+              //  dispatch(UserEventKeys.UpdateUserEvent, values);
             }
 
             if (handleClose !== undefined) {
@@ -58,7 +67,7 @@ const UserForm: React.FC<IDialogFormikProps<IUser>> = ({
         {({ submitForm, isSubmitting }) => (
           <Form>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={12}>
                 <Field
                   fullWidth
                   className="m-2"
@@ -68,7 +77,7 @@ const UserForm: React.FC<IDialogFormikProps<IUser>> = ({
                   label="Termék neve"
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={12}>
                 <Field
                   fullWidth
                   className="m-2"
@@ -78,16 +87,48 @@ const UserForm: React.FC<IDialogFormikProps<IUser>> = ({
                   label="Cikkszám"
                 />
               </Grid>
-              <Grid item xs={12} md={4}>
+              <Grid item xs={12} md={12}>
                 <Field
                   fullWidth
-                  className="m-2"
-                  component={TextField}
-                  name="phone"
-                  type="text"
-                  label="Telefon"
+                  name="manufacturer_id"
+                  component={Autocomplete}
+                  options={manufacturers}
+                  getOptionLabel={(option: Record<string, any>) => option.name}
+                  renderInput={(params: AutocompleteRenderInputParams) => (
+                    <TextFieldMUI
+                      {...params}
+                      // We have to manually set the corresponding fields on the input component
+                      label="Gyártó"
+                      name="manufacturer_id"
+                      variant="outlined"
+                    />
+                  )}
                 />
-
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Divider />
+                <TableContainer component={Paper}>
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell colSpan={3} align="center">
+                          <Typography variant="h3" component="div" gutterBottom>
+                            Termék tulajdonságok
+                          </Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                        <TableCell align="center">asdf</TableCell>
+                        <TableCell align="center">asdf</TableCell>
+                        <TableCell align="center">asdf</TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+              <Grid item xs={12} md={12}>
                 <br />
                 <br />
                 <br />
@@ -107,4 +148,4 @@ const UserForm: React.FC<IDialogFormikProps<IUser>> = ({
     </>
   );
 };
-export default UserForm;
+export default ProductForm;

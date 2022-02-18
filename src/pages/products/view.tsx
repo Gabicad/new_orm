@@ -22,7 +22,8 @@ import { Edit, AddCircle, DeleteForever } from '@mui/icons-material';
 import { IProduct, IProductFeature, IProductImages } from '../../models/Product';
 import { getImageSrc } from '../../libraries/ImageSrc';
 import PageBar, { IPageBar } from '../../components/PageBar';
-
+import SimpleTable from '../../components/SimpleTable/SimpleTable';
+import OfferForProduct from '../../components/OfferUtils/OffersForProduct';
 const productView = () => {
   const { dispatch, currentProduct } = useStoreon<ProductState, ProductEvents>('currentProduct');
   const history = useNavigate();
@@ -62,6 +63,17 @@ const productView = () => {
   const handleDelete = async (item: IProductImages) => {
     dispatch(ProductEventKeys.DeleteProductImageEvent, item.id);
   };
+
+  const offerHeader = [
+    {
+      title: 'Alap',
+      value: 'offer.id'
+    },
+    {
+      title: 'Név',
+      value: 'product_name'
+    }
+  ];
 
   return (
     <>
@@ -160,6 +172,18 @@ const productView = () => {
               })}
             </ImageList>
           )}
+        </Grid>
+
+        <Grid item xs={12} md={12} sx={{ mb: 5 }}>
+          {currentProduct.offer_details && (
+            <>
+              <Typography variant="h3" component="div" gutterBottom>
+                Árajánlatok
+              </Typography>
+              <OfferForProduct data={currentProduct.offer_details} />
+            </>
+          )}
+          <Divider />
         </Grid>
       </Grid>
     </>

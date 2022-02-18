@@ -1,4 +1,4 @@
-import { IProduct, IProductList } from '../../models/Product';
+import { IManufacturer, IProduct, IProductList } from '../../models/Product';
 export const InitProductsEvent = Symbol(`InitProductsEvent`);
 export const SaveProductEvent = Symbol(`SaveProductEvent`);
 export const LoadProductsEvent = Symbol(`LoadProductsEvent`);
@@ -7,6 +7,8 @@ export const GetProductsEvent = Symbol(`GetProductsEvent`);
 export const LoadCurrentProductEvent = Symbol(`LoadCurrentProductEvent`);
 export const ClearStateEvent = Symbol(`ClearStateEvent`);
 export const DeleteProductImageEvent = Symbol(`DeleteProductImageEvent`);
+export const GetAllManufacturersEvent = Symbol(`GetAllManufacturersEvent`);
+export const LoadManufacturersEvent = Symbol(`LoadManufacturersEvent`);
 
 export const ProductEventKeys = {
   GetProductsEvent,
@@ -16,7 +18,9 @@ export const ProductEventKeys = {
   UpdateProductEvent,
   LoadProductsEvent,
   LoadCurrentProductEvent,
-  DeleteProductImageEvent
+  DeleteProductImageEvent,
+  GetAllManufacturersEvent,
+  LoadManufacturersEvent
 } as const;
 
 export interface ProductEvents {
@@ -28,4 +32,6 @@ export interface ProductEvents {
   [LoadProductsEvent]: IProductList[];
   [UpdateProductEvent]: IProduct;
   [DeleteProductImageEvent]: number;
+  [GetAllManufacturersEvent]: void;
+  [LoadManufacturersEvent]: IManufacturer[];
 }

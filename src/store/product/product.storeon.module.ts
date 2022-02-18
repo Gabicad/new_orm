@@ -1,8 +1,8 @@
 import { createStoreon, StoreonModule } from 'storeon';
 import { productService } from '../../services/api';
-import { ProductEventKeys, ProductEvents } from './product.events';
+import { GetAllManufacturersEvent, ProductEventKeys, ProductEvents } from './product.events';
 import { ProductState } from './product.state';
-import { IProduct, IProductList } from '../../models/Product';
+import { IManufacturer, IProduct, IProductList } from '../../models/Product';
 import { getMaxId } from '../../libraries/utils';
 
 const getProductById = async (id: number) => {
@@ -13,9 +13,17 @@ const getProductById = async (id: number) => {
     console.log('Product not found');
   }
 };
+const getAllManufacturers = async () => {
+  try {
+    const data = await productService.getAllManufacturers();
+    return data ? data : undefined;
+  } catch (e) {
+    console.log('manufacturers not found');
+  }
+};
 
 export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store) => {
-  store.on('@init', () => ({ products: [] }));
+  store.on('@init', () => ({ products: [], manufacturers: [] }));
 
   store.on(ProductEventKeys.DeleteProductImageEvent, async (state, id: number) => {
     try {
@@ -47,6 +55,15 @@ export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store)
   });
   store.on(ProductEventKeys.ClearStateEvent, (state) => ({
     currentProduct: undefined
+  }));
+  store.on(ProductEventKeys.GetAllManufacturersEvent, async (state) => {
+    const manu = await getAllManufacturers();
+    if (manu !== undefined) {
+      store.dispatch(ProductEventKeys.LoadManufacturersEvent, manu);
+    }
+  });
+  store.on(ProductEventKeys.LoadManufacturersEvent, (state, manu: IManufacturer[]) => ({
+    manufacturers: manu
   }));
   store.on(ProductEventKeys.GetProductsEvent, async (state, product_id: number) => {
     const product = await getProductById(product_id);

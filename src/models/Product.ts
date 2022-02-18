@@ -1,4 +1,4 @@
-import { IUser } from './User';
+import { IOfferDetail } from './Offers';
 
 export interface IProductList {
   id: number | undefined;
@@ -15,6 +15,8 @@ export interface IProductList {
 export interface IProduct extends IProductList {
   description?: string;
   description_short?: string;
+  manufacturer_id?: number;
+  offer_details?: IOfferDetail[];
 }
 
 export interface IProductFeature {
@@ -42,8 +44,9 @@ export const InitialProduct: IProduct = {
   description_short: undefined,
   name: '',
   active: true,
+  manufacturer_id: undefined,
   manufacturer: undefined,
-  product_features: undefined,
-  product_images: undefined,
+  product_features: [],
+  product_images: [],
   price: 0
 };

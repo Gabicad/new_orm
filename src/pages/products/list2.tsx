@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStoreon } from 'storeon/react';
 import { ProductState, ProductEvents, ProductEventKeys } from '../../store/product';
 import DataGird from '../../components/DataGrid';
@@ -8,13 +8,19 @@ import { ActionMenu, IActionMenu } from '../../components/TableActionMenu';
 import { AddCircle, Delete, Edit, Pageview } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import PageBar, { IPageBar } from '../../components/PageBar';
-
+import Dialog from '../../components/Dialog';
+import ProductForm from './form';
+import { IUser } from '../../models/User';
 const products = () => {
   const { dispatch, products } = useStoreon<ProductState, ProductEvents>('products');
   const history = useNavigate();
   useEffect(() => {
     dispatch(ProductEventKeys.InitProductsEvent);
   }, []);
+
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [productEdit, setProductEdit] = useState<IProduct | undefined>(undefined);
+  const [modalTitle, setModalTitle] = useState<string>('Új termék');
 
   const ActionItems: IActionMenu<IProductList>[] = [
     {
@@ -66,7 +72,7 @@ const products = () => {
         title: 'Új termék',
         color: 'primary',
         onClick: () => {
-          history(`/Product/new`);
+          setOpenEdit(!openEdit);
         }
       }
     ]
@@ -74,6 +80,9 @@ const products = () => {
 
   return (
     <>
+      <Dialog buttonVisible={false} outsideOpener={openEdit} title={modalTitle}>
+        <ProductForm data={productEdit}></ProductForm>
+      </Dialog>
       <PageBar pageProps={pageBar} />
       <DataGird listData={products} columns={columns}></DataGird>
     </>

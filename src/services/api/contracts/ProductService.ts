@@ -1,9 +1,10 @@
 import { IApiClient } from '../core/ApiClient';
 
-import { IProductList, IProduct } from '../../../models/Product';
+import { IProductList, IProduct, IManufacturer } from '../../../models/Product';
 
 export interface IProductApiClient {
   getAllProduct(): Promise<IProductList[] | undefined>;
+  getAllManufacturers(): Promise<IManufacturer[] | undefined>;
   getLastId(): Promise<number | undefined>;
   saveProduct(product: IProduct): Promise<IProduct | undefined>;
   getProduct(id: number): Promise<IProduct | undefined>;
@@ -21,6 +22,14 @@ export class ProductApiClient implements IProductApiClient {
   async getAllProduct(): Promise<IProductList[] | undefined> {
     try {
       const response = await this.ProductApiClient.get<IProductList[]>(`/Products`);
+      return response.length > 0 ? response : undefined;
+    } catch (exception) {
+      console.error(exception);
+    }
+  }
+  async getAllManufacturers(): Promise<IManufacturer[] | undefined> {
+    try {
+      const response = await this.ProductApiClient.get<IManufacturer[]>(`/Manufacturers`);
       return response.length > 0 ? response : undefined;
     } catch (exception) {
       console.error(exception);
@@ -83,6 +92,9 @@ export default class ProductService {
 
   async getAllProduct(): Promise<IProductList[] | undefined> {
     return this.ProductApiClient.getAllProduct();
+  }
+  async getAllManufacturers(): Promise<IManufacturer[] | undefined> {
+    return this.ProductApiClient.getAllManufacturers();
   }
   async getLastId(): Promise<number | undefined> {
     return this.ProductApiClient.getLastId();

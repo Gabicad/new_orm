@@ -1,5 +1,5 @@
-import { Button, LinearProgress } from '@mui/material';
-import { Formik, FormikHelpers, FormikProps, Form, Field, FieldProps } from 'formik';
+import { Button } from '@mui/material';
+import { Formik, Form, Field } from 'formik';
 import { TextField } from 'formik-mui';
 import * as React from 'react';
 import { IUser, InitialUser } from '../../models/User';
@@ -8,7 +8,6 @@ import { FormikErrors } from 'formik';
 import { FormikEventKeys, FormikStore } from '../../store/formik';
 import { IDialogFormikProps } from '../../models/DialogFormik';
 import { UserEventKeys, UserState, UserEvents } from '../../store/user';
-import { useEffect } from 'react';
 import { useStoreon } from 'storeon/react';
 
 const UserForm: React.FC<IDialogFormikProps<IUser>> = ({
