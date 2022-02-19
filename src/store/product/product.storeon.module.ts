@@ -3,7 +3,7 @@ import { productService } from '../../services/api';
 import { GetAllManufacturersEvent, ProductEventKeys, ProductEvents } from './product.events';
 import { ProductState } from './product.state';
 import { IManufacturer, IProduct, IProductList } from '../../models/Product';
-import { getMaxId } from '../../libraries/utils';
+import { getMaxId, getMaxUpdatedAt } from '../../libraries/utils';
 
 const getProductById = async (id: number) => {
   try {
@@ -37,9 +37,9 @@ export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store)
     try {
       let data = undefined;
       if (state.products.length > 0) {
-        const maxValueOfY = getMaxId<IProductList>(state.products);
-        const lastId = await productService.getLastId();
-        if (maxValueOfY !== lastId) {
+        const localMaxUpdatedAt: any = getMaxUpdatedAt<IProductList>(state.products);
+        const lastModifyDate = await productService.getLastModifyDateTime();
+        if (localMaxUpdatedAt !== lastModifyDate) {
           data = await productService.getAllProduct();
         }
       } else {

@@ -62,6 +62,22 @@ export const defaultTheme: any = {
         main: '#ff9000',
         light: '#FFECDC'
       },
+      green: {
+        main: '#22d20c',
+        contrastText: '#000000'
+      },
+      brown: {
+        main: '#9d4500',
+        contrastText: '#ffffff'
+      },
+      error: {
+        main: '#ff0000',
+        contrastText: '#ffffff'
+      },
+      deeporange: {
+        main: 'rgb(255,160,36)',
+        contrastText: '#ffffff'
+      },
       text: textLight,
       gray: {
         50: '#fafafa',

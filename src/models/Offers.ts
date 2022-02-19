@@ -1,11 +1,14 @@
 import { ICustomer, IInvoiceAddress, IShipAddress } from './Customer';
-import { ChipPropsColorOverrides } from '@mui/material/Chip/Chip';
+import { ChipPropsColorOverrides } from '@mui/material';
 import { OverridableStringUnion } from '@mui/types';
 
 export interface IOfferStatus {
   id?: number;
   name: string;
-  color: string;
+  color: OverridableStringUnion<
+    'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning',
+    ChipPropsColorOverrides
+  >;
   auto?: boolean;
   priority?: number;
   alert_time?: number;

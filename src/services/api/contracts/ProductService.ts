@@ -5,7 +5,7 @@ import { IProductList, IProduct, IManufacturer } from '../../../models/Product';
 export interface IProductApiClient {
   getAllProduct(): Promise<IProductList[] | undefined>;
   getAllManufacturers(): Promise<IManufacturer[] | undefined>;
-  getLastId(): Promise<number | undefined>;
+  getLastModifyDateTime(): Promise<Date | undefined>;
   saveProduct(product: IProduct): Promise<IProduct | undefined>;
   getProduct(id: number): Promise<IProduct | undefined>;
   deleteImage(id: number): Promise<boolean | undefined>;
@@ -62,9 +62,9 @@ export class ProductApiClient implements IProductApiClient {
     }
   }
 
-  async getLastId(): Promise<number | undefined> {
+  async getLastModifyDateTime(): Promise<Date | undefined> {
     try {
-      const response = await this.ProductApiClient.get<number>(`/Products/getLastId`);
+      const response = await this.ProductApiClient.get<Date>(`/Products/getLastModifyDateTime`);
       return response ? response : undefined;
     } catch (exception) {
       console.error(exception);
@@ -96,8 +96,8 @@ export default class ProductService {
   async getAllManufacturers(): Promise<IManufacturer[] | undefined> {
     return this.ProductApiClient.getAllManufacturers();
   }
-  async getLastId(): Promise<number | undefined> {
-    return this.ProductApiClient.getLastId();
+  async getLastModifyDateTime(): Promise<Date | undefined> {
+    return this.ProductApiClient.getLastModifyDateTime();
   }
   async updateProduct(product: IProduct): Promise<boolean | undefined> {
     const response = await this.ProductApiClient.updateProduct(product);

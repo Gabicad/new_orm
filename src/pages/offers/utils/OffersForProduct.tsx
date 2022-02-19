@@ -7,11 +7,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { IOfferDetail } from '../../models/Offers';
+import { IOfferDetail } from '../../../models/Offers';
 
-interface ChipPropsColorOverrides {
-  [key: string]: string;
-}
 export default function OffersForProduct({ data }: { data: IOfferDetail[] }) {
   return (
     <TableContainer component={Paper}>
@@ -19,7 +16,7 @@ export default function OffersForProduct({ data }: { data: IOfferDetail[] }) {
         <TableHead>
           <TableRow>
             <TableCell component="th" scope="row">
-              ID
+              Rendelés ID
             </TableCell>
             <TableCell component="th" scope="row">
               Státusz
@@ -55,7 +52,11 @@ export default function OffersForProduct({ data }: { data: IOfferDetail[] }) {
                 {row.offer?.id}
               </TableCell>
               <TableCell component="th" scope="row">
-                <Chip label={row.offer?.offer_status?.name || 'Nincs'} />
+                <Chip
+                  size="small"
+                  color={row?.offer?.offer_status?.color}
+                  label={row.offer?.offer_status?.name || 'Nincs'}
+                />
               </TableCell>
               <TableCell component="th" scope="row">
                 {row.offer?.invoice_address?.full_name}

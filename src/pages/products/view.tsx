@@ -23,7 +23,7 @@ import { IProduct, IProductFeature, IProductImages } from '../../models/Product'
 import { getImageSrc } from '../../libraries/ImageSrc';
 import PageBar, { IPageBar } from '../../components/PageBar';
 import SimpleTable from '../../components/SimpleTable/SimpleTable';
-import OfferForProduct from '../../components/OfferUtils/OffersForProduct';
+import OfferForProduct from '../offers/utils/OffersForProduct';
 const productView = () => {
   const { dispatch, currentProduct } = useStoreon<ProductState, ProductEvents>('currentProduct');
   const history = useNavigate();

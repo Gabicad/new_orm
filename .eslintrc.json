@@ -3,7 +3,9 @@
         "node": true,
         "commonjs": true,
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "es6":     true,
+        "mocha":   true
     },
     "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended"],
     "parser": "@typescript-eslint/parser",
@@ -11,7 +13,7 @@
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": 13,
+        "ecmaVersion": 6,
         "sourceType": "module"
     },
     "plugins": [

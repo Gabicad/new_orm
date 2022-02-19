@@ -9,7 +9,7 @@ export interface IProductList {
   product_images?: IProductImages[];
   price: number;
   created_at?: Date;
-  modified_at?: Date;
+  updated_at?: Date;
 }
 
 export interface IProduct extends IProductList {
