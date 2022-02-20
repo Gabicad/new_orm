@@ -175,8 +175,9 @@ const productView = () => {
         </Grid>
 
         <Grid item xs={12} md={12} sx={{ mb: 5 }}>
-          {currentProduct.offer_details && (
+          {currentProduct.offer_details && currentProduct.offer_details.length > 0 && (
             <>
+              <Divider sx={{ mt: 3, mb: 3 }} />
               <Typography variant="h3" component="div" gutterBottom>
                 Árajánlatok
               </Typography>

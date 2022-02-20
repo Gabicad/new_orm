@@ -53,7 +53,6 @@ const products = () => {
         return params.row?.manufacturer?.name ?? '';
       }
     },
-    { field: 'price', headerName: 'Ár', flex: 0.2 },
     {
       hideable: false,
       field: 'Actions',

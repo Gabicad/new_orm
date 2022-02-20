@@ -9,6 +9,7 @@ export interface ICustomer {
   company?: string | null;
   comment?: string | null;
   full_name?: string | null;
+  display_name?: string | null;
   created_at?: Date | null;
   modified_at?: Date | null;
   deleted_at?: Date | null;
@@ -39,7 +40,7 @@ export interface IShipAddress {
   company?: string | null;
   comment?: string | null;
   default: boolean;
-  full_name?: string | null;
+  full_address?: string | null;
   created_at?: Date | null;
   modified_at?: Date | null;
   deleted_at?: Date | null;
@@ -57,7 +58,7 @@ export interface IInvoiceAddress {
   tax_number?: string | null;
   comment?: string | null;
   default: boolean;
-  full_name?: string | null;
+  full_address?: string | null;
   created_at?: Date | null;
   modified_at?: Date | null;
   deleted_at?: Date | null;

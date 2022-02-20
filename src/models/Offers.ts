@@ -41,18 +41,30 @@ export interface IOffer {
   offer_details?: IOfferDetail[];
 }
 export interface IOfferDetail {
-  id?: number;
+  id: number;
   extra_offer_info?: string;
   extra_info?: string;
-  in_stock?: boolean;
-  offer?: IOffer;
+  in_stock: boolean;
+  offer: IOffer;
   offer_text?: string;
-  price?: number;
+  price: number;
   product_id: number;
   product_image_id: number;
   product_name: string;
   quantity: number;
-  created_at?: Date;
+  created_at: Date;
   updated_at?: Date;
   deleted_at?: Date;
+}
+
+export interface IOfferDetailNew {
+  extra_offer_info?: string;
+  extra_info?: string;
+  in_stock?: boolean;
+  offer_text?: string;
+  price: number;
+  product_id: number;
+  product_image_id: number;
+  product_name: string;
+  quantity: number;
 }

@@ -7,9 +7,29 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { IOfferDetail } from '../../../models/Offers';
-
+import { IOffer, IOfferDetail } from '../../../models/Offers';
+import NumberFormat from 'react-number-format';
+import { ActionMenu, IActionMenu } from '../../../components/TableActionMenu';
+import parse from 'html-react-parser';
+import { Pageview } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { isMobile } from 'react-device-detect';
+import OffersForProductCard from './OffersForProductCard';
 export default function OffersForProduct({ data }: { data: IOfferDetail[] }) {
+  const history = useNavigate();
+  const ActionItemsOffer: IActionMenu<IOffer>[] = [
+    {
+      title: 'Adatlap',
+      icon: Pageview,
+      onClick: (item: IOffer) => {
+        history(`/Offer/view/${item.id}`);
+      }
+    }
+  ];
+  if (isMobile) {
+    return <OffersForProductCard data={data} />;
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{}} size="small" aria-label="a dense table">
@@ -22,10 +42,7 @@ export default function OffersForProduct({ data }: { data: IOfferDetail[] }) {
               Státusz
             </TableCell>
             <TableCell component="th" scope="row">
-              Számlázás
-            </TableCell>
-            <TableCell component="th" scope="row">
-              Szállítás
+              Ügyfél
             </TableCell>
             <TableCell component="th" scope="row">
               Készítés Ideje
@@ -34,7 +51,7 @@ export default function OffersForProduct({ data }: { data: IOfferDetail[] }) {
               Termék neve
             </TableCell>
             <TableCell component="th" scope="row">
-              Mennyiség
+              db
             </TableCell>
             <TableCell component="th" scope="row">
               Ár
@@ -59,28 +76,30 @@ export default function OffersForProduct({ data }: { data: IOfferDetail[] }) {
                 />
               </TableCell>
               <TableCell component="th" scope="row">
-                {row.offer?.invoice_address?.full_name}
+                {row.offer?.customer?.display_name}
               </TableCell>
-              <TableCell component="th" scope="row">
-                {row.offer?.ship_address?.full_name}
-              </TableCell>
-              <TableCell component="th" scope="row">
+              <TableCell component="th" scope="row" sx={{ whiteSpace: 'nowrap' }}>
                 {row.offer?.offer_date}
               </TableCell>
               <TableCell component="th" scope="row">
                 {row.product_name}
               </TableCell>
-              <TableCell component="th" scope="row">
-                {row.quantity}
+              <TableCell component="th" scope="row" sx={{ whiteSpace: 'nowrap' }}>
+                {row.quantity} db
+              </TableCell>
+              <TableCell component="th" scope="row" sx={{ whiteSpace: 'nowrap' }}>
+                <NumberFormat
+                  value={row.price}
+                  displayType={'text'}
+                  thousandSeparator=" "
+                  suffix={' Ft'}
+                />
               </TableCell>
               <TableCell component="th" scope="row">
-                {row.price}
+                {row.extra_info && parse(row.extra_info)}
               </TableCell>
               <TableCell component="th" scope="row">
-                {row.price}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {row.price}
+                {ActionMenu(row.offer, ActionItemsOffer)}
               </TableCell>
             </TableRow>
           ))}
