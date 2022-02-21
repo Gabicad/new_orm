@@ -85,15 +85,7 @@ export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store)
   store.on(ProductEventKeys.LoadProductsEvent, (state, Products: IProductList[]) => ({
     products: Products
   }));
-  store.on(ProductEventKeys.SaveProductEvent, async (state, product: IProduct) => {
-    let productSaved: IProduct | undefined = undefined;
-    try {
-      productSaved = await productService.saveProduct(product);
-    } catch (e) {
-      console.error('Product Module Store InitProductsEvent');
-    }
-    store.dispatch(ProductEventKeys.AddProductEvent, productSaved);
-  });
+
   store.on(ProductEventKeys.AddProductEvent, (state, Product: IProduct) => ({
     products: [...state.products, Product]
   }));

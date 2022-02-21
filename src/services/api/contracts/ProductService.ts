@@ -6,7 +6,7 @@ export interface IProductApiClient {
   getAllProduct(): Promise<IProductList[] | undefined>;
   getAllManufacturers(): Promise<IManufacturer[] | undefined>;
   getLastModifyDateTime(): Promise<Date | undefined>;
-  saveProduct(product: IProduct): Promise<IProduct | undefined>;
+  saveProduct(product: FormData): Promise<IProduct | undefined>;
   getProduct(id: number): Promise<IProduct | undefined>;
   deleteImage(id: number): Promise<boolean | undefined>;
   updateProduct(product: IProduct): Promise<boolean | undefined>;
@@ -36,9 +36,13 @@ export class ProductApiClient implements IProductApiClient {
     }
   }
 
-  async saveProduct(product: IProduct): Promise<IProduct | undefined> {
+  async saveProduct(product: FormData): Promise<IProduct | undefined> {
     try {
-      const response = await this.ProductApiClient.post<IProduct, IProduct>(`/Products`, product);
+      const response = await this.ProductApiClient.post<FormData, IProduct>(`/Products`, product, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
       return response.data ? response.data : undefined;
     } catch (exception) {
       console.error(exception);
@@ -107,7 +111,7 @@ export default class ProductService {
     const response = await this.ProductApiClient.deleteImage(id);
     return response;
   }
-  async saveProduct(product: IProduct): Promise<IProduct | undefined> {
+  async saveProduct(product: FormData): Promise<IProduct | undefined> {
     const response = await this.ProductApiClient.saveProduct(product);
     return response;
   }

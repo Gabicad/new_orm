@@ -38,15 +38,18 @@ export interface IManufacturer {
   alias: string;
 }
 
-export const InitialProduct: IProduct = {
-  id: undefined,
-  description: undefined,
-  description_short: undefined,
+export const InitialProduct: INewProduct = {
   name: '',
-  active: true,
-  manufacturer_id: undefined,
-  manufacturer: undefined,
-  product_features: [],
-  product_images: [],
-  price: 0
+  reference: '',
+  manufacturer_id: '',
+  productFeatures: [],
+  files: []
 };
+export interface INewProduct {
+  name: string;
+  reference: string;
+  manufacturer_id: string;
+  manufacturer?: IManufacturer;
+  productFeatures: any[];
+  files: any[];
+}

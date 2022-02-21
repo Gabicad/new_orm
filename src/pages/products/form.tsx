@@ -21,9 +21,9 @@ import { FormikErrors } from 'formik';
 import { FormikEventKeys, FormikStore } from '../../store/formik';
 import { IDialogFormikProps } from '../../models/DialogFormik';
 import { useStoreon } from 'storeon/react';
-import { InitialProduct, IProduct } from 'models/Product';
+import { InitialProduct, IProduct, INewProduct } from 'models/Product';
 import { ProductEventKeys, ProductEvents, ProductState } from 'store/product';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
@@ -49,16 +49,29 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
     setPropertyValue('');
   };
 
+  const fileRef = useRef<HTMLInputElement>(null);
   return (
     <>
       <Formik
-        initialValues={data ?? InitialProduct}
-        onSubmit={async (values, { setSubmitting, setErrors }) => {
+        initialValues={InitialProduct}
+        onSubmit={async (values: INewProduct, { setSubmitting, setErrors }) => {
           FormikStore.dispatch(FormikEventKeys.DeleteErrorsEvent);
           let response;
           if (data === undefined) {
-            values.manufacturer_id = values?.manufacturer?.id;
-            response = await productService.saveProduct(values);
+            const formData = new FormData();
+            if (fileRef?.current?.files && fileRef?.current?.files.length > 0) {
+              Array.from(fileRef.current.files).forEach((file: any) => {
+                formData.append('files[]', file);
+              });
+            }
+
+            formData.append('reference', values.reference);
+            formData.append('name', values.name);
+            if (values?.manufacturer?.id) {
+              formData.append('manufacturer_id', values?.manufacturer?.id.toString());
+            }
+
+            response = await productService.saveProduct(formData);
             dispatch(ProductEventKeys.AddProductEvent, response);
           } else {
             //response = await userService.updateUser(values);
@@ -66,8 +79,8 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
 
           if (response === undefined || !response) {
             const errors = FormikStore.get();
-            const formikErrors = errors.errors as FormikErrors<IProduct>;
-            setErrors(formikErrors);
+            const formikErrors = errors.errors as FormikErrors<INewProduct>;
+            //      setErrors(formikErrors);
           } else {
             if (handleClose !== undefined) {
               handleClose();
@@ -116,6 +129,11 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
                     />
                   )}
                 />
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <Divider />
+                <Typography>Képek</Typography>
+                <input ref={fileRef} name="files" type="file" multiple />
               </Grid>
               <Grid item xs={12} md={12}>
                 <Divider />
