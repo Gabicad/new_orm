@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useStoreon } from 'storeon/react';
 import { ProductState, ProductEvents, ProductEventKeys } from '../../store/product';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +24,12 @@ import { getImageSrc } from '../../libraries/ImageSrc';
 import PageBar, { IPageBar } from '../../components/PageBar';
 import SimpleTable from '../../components/SimpleTable/SimpleTable';
 import OfferForProduct from '../offers/utils/OffersForProduct';
+import Dialog from '../../components/Dialog';
+import ProductForm from './form';
 const productView = () => {
+  const [openEdit, setOpenEdit] = useState<boolean>(false);
+  const [productEdit, setProductEdit] = useState<IProduct | undefined>(undefined);
+  const [modalTitle, setModalTitle] = useState<string>('Új termék');
   const { dispatch, currentProduct } = useStoreon<ProductState, ProductEvents>('currentProduct');
   const history = useNavigate();
   let { id } = useParams();
@@ -46,7 +51,8 @@ const productView = () => {
         title: 'Új termék',
         color: 'primary',
         onClick: () => {
-          history(`/Product/new`);
+          setModalTitle('Új termék');
+          setOpenEdit(!openEdit);
         }
       },
       {
@@ -54,7 +60,9 @@ const productView = () => {
         title: 'Módosítás',
         color: 'warning',
         onClick: (item: IProduct | undefined) => {
-          history(`/Product/edit/${item?.id}`);
+          setModalTitle('Módosítás');
+          setProductEdit(item);
+          setOpenEdit(!openEdit);
         }
       }
     ]
@@ -64,19 +72,11 @@ const productView = () => {
     dispatch(ProductEventKeys.DeleteProductImageEvent, item.id);
   };
 
-  const offerHeader = [
-    {
-      title: 'Alap',
-      value: 'offer.id'
-    },
-    {
-      title: 'Név',
-      value: 'product_name'
-    }
-  ];
-
   return (
     <>
+      <Dialog buttonVisible={false} outsideOpener={openEdit} title={modalTitle}>
+        <ProductForm data={productEdit} />
+      </Dialog>
       <PageBar item={currentProduct} pageProps={pageBar} />
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>

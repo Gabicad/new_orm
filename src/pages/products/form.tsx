@@ -23,17 +23,31 @@ import { IDialogFormikProps } from '../../models/DialogFormik';
 import { useStoreon } from 'storeon/react';
 import { InitialProduct, IProduct } from 'models/Product';
 import { ProductEventKeys, ProductEvents, ProductState } from 'store/product';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
   handleClose,
   data = undefined
 }: IDialogFormikProps<IProduct>) => {
   const { dispatch, manufacturers } = useStoreon<ProductState, ProductEvents>('manufacturers');
-
+  const [property, setProperty] = useState<string>('');
+  const [propertyValue, setPropertyValue] = useState<string>('');
+  const [properties, setProperties] = useState<Record<string, any>[]>([]);
+  const history = useNavigate();
   useEffect(() => {
     dispatch(ProductEventKeys.GetAllManufacturersEvent);
   }, []);
+
+  if (data !== undefined) {
+    data.manufacturer_id = data.manufacturer?.id;
+  }
+
+  const handleAddButton = () => {
+    setProperties([...properties, { name: property, value: propertyValue }]);
+    setProperty('');
+    setPropertyValue('');
+  };
 
   return (
     <>
@@ -43,7 +57,9 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
           FormikStore.dispatch(FormikEventKeys.DeleteErrorsEvent);
           let response;
           if (data === undefined) {
-            // response = await userService.saveUser(values);
+            values.manufacturer_id = values?.manufacturer?.id;
+            response = await productService.saveProduct(values);
+            dispatch(ProductEventKeys.AddProductEvent, response);
           } else {
             //response = await userService.updateUser(values);
           }
@@ -53,14 +69,9 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
             const formikErrors = errors.errors as FormikErrors<IProduct>;
             setErrors(formikErrors);
           } else {
-            if (data === undefined) {
-              //  dispatch(UserEventKeys.SaveUserEvent, values);
-            } else {
-              //  dispatch(UserEventKeys.UpdateUserEvent, values);
-            }
-
             if (handleClose !== undefined) {
               handleClose();
+              history(`/Product/View/${response.id}`);
             }
           }
         }}>
@@ -90,16 +101,17 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
               <Grid item xs={12} md={12}>
                 <Field
                   fullWidth
-                  name="manufacturer_id"
+                  name="manufacturer"
                   component={Autocomplete}
                   options={manufacturers}
+                  value={data?.manufacturer || null}
                   getOptionLabel={(option: Record<string, any>) => option.name}
                   renderInput={(params: AutocompleteRenderInputParams) => (
                     <TextFieldMUI
                       {...params}
                       // We have to manually set the corresponding fields on the input component
                       label="Gyártó"
-                      name="manufacturer_id"
+                      name="manufacturer"
                       variant="outlined"
                     />
                   )}
@@ -120,10 +132,43 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
                     </TableHead>
                     <TableBody>
                       <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                        <TableCell align="center">asdf</TableCell>
-                        <TableCell align="center">asdf</TableCell>
-                        <TableCell align="center">asdf</TableCell>
+                        <TableCell align="center">
+                          <TextFieldMUI
+                            onChange={(e) => setProperty(e.target.value)}
+                            id="standard-basic"
+                            label="Tulajdonság"
+                            variant="standard"
+                            value={property}
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <TextFieldMUI
+                            onChange={(e) => setPropertyValue(e.target.value)}
+                            id="standard-basic"
+                            label="Érték"
+                            variant="standard"
+                            value={propertyValue}
+                          />
+                        </TableCell>
+                        <TableCell align="center">
+                          <Button color="primary" onClick={handleAddButton}>
+                            Hozzáad
+                          </Button>
+                        </TableCell>
                       </TableRow>
+                      {properties.map((property) => (
+                        <TableRow
+                          key={property.name}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                          <TableCell align="center">{property.name}</TableCell>
+                          <TableCell align="center">{property.value}</TableCell>
+                          <TableCell align="center">
+                            <Button color="error" onClick={handleAddButton}>
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </TableContainer>

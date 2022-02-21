@@ -1,6 +1,11 @@
 import { createStoreon, StoreonModule } from 'storeon';
 import { productService } from '../../services/api';
-import { GetAllManufacturersEvent, ProductEventKeys, ProductEvents } from './product.events';
+import {
+  GetAllManufacturersEvent,
+  ProductEventKeys,
+  ProductEvents,
+  SaveProductEvent
+} from './product.events';
 import { ProductState } from './product.state';
 import { IManufacturer, IProduct, IProductList } from '../../models/Product';
 import { getMaxId, getMaxUpdatedAt } from '../../libraries/utils';
@@ -57,6 +62,9 @@ export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store)
     currentProduct: undefined
   }));
   store.on(ProductEventKeys.GetAllManufacturersEvent, async (state) => {
+    if (state.manufacturers.length > 0) {
+      return;
+    }
     const manu = await getAllManufacturers();
     if (manu !== undefined) {
       store.dispatch(ProductEventKeys.LoadManufacturersEvent, manu);
@@ -77,8 +85,17 @@ export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store)
   store.on(ProductEventKeys.LoadProductsEvent, (state, Products: IProductList[]) => ({
     products: Products
   }));
-  store.on(ProductEventKeys.SaveProductEvent, (state, product: IProduct) => ({
-    products: [...state.products, product]
+  store.on(ProductEventKeys.SaveProductEvent, async (state, product: IProduct) => {
+    let productSaved: IProduct | undefined = undefined;
+    try {
+      productSaved = await productService.saveProduct(product);
+    } catch (e) {
+      console.error('Product Module Store InitProductsEvent');
+    }
+    store.dispatch(ProductEventKeys.AddProductEvent, productSaved);
+  });
+  store.on(ProductEventKeys.AddProductEvent, (state, Product: IProduct) => ({
+    products: [...state.products, Product]
   }));
   store.on(ProductEventKeys.UpdateProductEvent, (state, product: IProduct) => {
     const foundIndex = state.products.findIndex((x: IProductList) => x.id == product.id);

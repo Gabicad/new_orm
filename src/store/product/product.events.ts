@@ -9,11 +9,13 @@ export const ClearStateEvent = Symbol(`ClearStateEvent`);
 export const DeleteProductImageEvent = Symbol(`DeleteProductImageEvent`);
 export const GetAllManufacturersEvent = Symbol(`GetAllManufacturersEvent`);
 export const LoadManufacturersEvent = Symbol(`LoadManufacturersEvent`);
+export const AddProductEvent = Symbol(`AddProductEvent`);
 
 export const ProductEventKeys = {
   GetProductsEvent,
   ClearStateEvent,
   InitProductsEvent,
+  AddProductEvent,
   SaveProductEvent,
   UpdateProductEvent,
   LoadProductsEvent,
@@ -25,6 +27,7 @@ export const ProductEventKeys = {
 
 export interface ProductEvents {
   [InitProductsEvent]: void;
+  [AddProductEvent]: IProduct;
   [SaveProductEvent]: IProduct;
   [GetProductsEvent]: number;
   [ClearStateEvent]: void;
