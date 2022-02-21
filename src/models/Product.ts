@@ -13,6 +13,7 @@ export interface IProductList {
 }
 
 export interface IProduct extends IProductList {
+  reference: string;
   description?: string;
   description_short?: string;
   manufacturer_id?: number;
@@ -50,6 +51,6 @@ export interface INewProduct {
   reference: string;
   manufacturer_id: string;
   manufacturer?: IManufacturer;
-  productFeatures: any[];
-  files: any[];
+  productFeatures?: any[];
+  files?: any[];
 }

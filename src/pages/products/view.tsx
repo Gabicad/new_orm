@@ -52,6 +52,7 @@ const productView = () => {
         color: 'primary',
         onClick: () => {
           setModalTitle('Új termék');
+          setProductEdit(undefined);
           setOpenEdit(!openEdit);
         }
       },

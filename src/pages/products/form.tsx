@@ -49,11 +49,27 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
     setPropertyValue('');
   };
 
+  const handleDeleteButton = (item: any) => {
+    const newProps = properties.filter((prop) => prop !== item);
+    setProperties([...newProps]);
+  };
+
+  let load: INewProduct;
+  if (data !== undefined) {
+    load = {
+      name: data.name,
+      reference: data.reference,
+      manufacturer_id: data?.manufacturer_id?.toString() || ''
+    };
+  } else {
+    load = InitialProduct;
+  }
+
   const fileRef = useRef<HTMLInputElement>(null);
   return (
     <>
       <Formik
-        initialValues={InitialProduct}
+        initialValues={load}
         onSubmit={async (values: INewProduct, { setSubmitting, setErrors }) => {
           FormikStore.dispatch(FormikEventKeys.DeleteErrorsEvent);
           let response;
@@ -64,7 +80,9 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
                 formData.append('files[]', file);
               });
             }
-
+            if (properties && properties.length > 0) {
+              formData.append('productFeatures', JSON.stringify(properties));
+            }
             formData.append('reference', values.reference);
             formData.append('name', values.name);
             if (values?.manufacturer?.id) {
@@ -130,67 +148,76 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={12} md={12}>
-                <Divider />
-                <Typography>Képek</Typography>
-                <input ref={fileRef} name="files" type="file" multiple />
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <Divider />
-                <TableContainer component={Paper}>
-                  <Table aria-label="simple table">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell colSpan={3} align="center">
-                          <Typography variant="h3" component="div" gutterBottom>
-                            Termék tulajdonságok
-                          </Typography>
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                        <TableCell align="center">
-                          <TextFieldMUI
-                            onChange={(e) => setProperty(e.target.value)}
-                            id="standard-basic"
-                            label="Tulajdonság"
-                            variant="standard"
-                            value={property}
-                          />
-                        </TableCell>
-                        <TableCell align="center">
-                          <TextFieldMUI
-                            onChange={(e) => setPropertyValue(e.target.value)}
-                            id="standard-basic"
-                            label="Érték"
-                            variant="standard"
-                            value={propertyValue}
-                          />
-                        </TableCell>
-                        <TableCell align="center">
-                          <Button color="primary" onClick={handleAddButton}>
-                            Hozzáad
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                      {properties.map((property) => (
-                        <TableRow
-                          key={property.name}
-                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                          <TableCell align="center">{property.name}</TableCell>
-                          <TableCell align="center">{property.value}</TableCell>
-                          <TableCell align="center">
-                            <Button color="error" onClick={handleAddButton}>
-                              Delete
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Grid>
+              {data === undefined && (
+                <>
+                  <Grid item xs={12} md={12}>
+                    <Divider />
+                    <Typography>Képek</Typography>
+                    <input ref={fileRef} name="files" type="file" multiple />
+                  </Grid>
+                  <Grid item xs={12} md={12}>
+                    <Divider />
+                    <TableContainer component={Paper}>
+                      <Table aria-label="simple table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell colSpan={3} align="center">
+                              <Typography variant="h3" component="div" gutterBottom>
+                                Termék tulajdonságok
+                              </Typography>
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                            <TableCell align="center">
+                              <TextFieldMUI
+                                onChange={(e) => setProperty(e.target.value)}
+                                id="standard-basic"
+                                label="Tulajdonság"
+                                variant="standard"
+                                value={property}
+                              />
+                            </TableCell>
+                            <TableCell align="center">
+                              <TextFieldMUI
+                                onChange={(e) => setPropertyValue(e.target.value)}
+                                id="standard-basic"
+                                label="Érték"
+                                variant="standard"
+                                value={propertyValue}
+                              />
+                            </TableCell>
+                            <TableCell align="center">
+                              <Button color="primary" onClick={handleAddButton}>
+                                Hozzáad
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                          {properties.map((property) => (
+                            <TableRow
+                              key={property.name}
+                              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                              <TableCell size="small" align="center">
+                                {property.name}
+                              </TableCell>
+                              <TableCell size="small" align="center">
+                                {property.value}
+                              </TableCell>
+                              <TableCell size="small" align="center">
+                                <Button color="error" onClick={() => handleDeleteButton(property)}>
+                                  Törlés
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Grid>
+                </>
+              )}
+
               <Grid item xs={12} md={12}>
                 <br />
                 <br />
