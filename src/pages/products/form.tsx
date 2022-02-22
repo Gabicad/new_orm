@@ -76,8 +76,8 @@ const ProductForm: React.FC<IDialogFormikProps<IProduct>> = ({
           if (data === undefined) {
             const formData = new FormData();
             if (fileRef?.current?.files && fileRef?.current?.files.length > 0) {
-              Array.from(fileRef.current.files).forEach((file: any) => {
-                formData.append('files[]', file);
+              Array.from(fileRef.current.files).forEach((file: any, index: number) => {
+                formData.append('files[' + index + ']', file);
               });
             }
             if (properties && properties.length > 0) {

@@ -81,7 +81,7 @@ const productView = () => {
           });
           if (result) {
             if (item?.id) dispatch(ProductEventKeys.DeleteProductEvent, item.id);
-            history('Products/List');
+            history('/Products/List');
             return;
           }
           return;
@@ -92,6 +92,7 @@ const productView = () => {
 
   const handleDelete = async (item: IProductImages) => {
     dispatch(ProductEventKeys.DeleteProductImageEvent, item.id);
+    dispatch(ProductEventKeys.GetProductsEvent, Number(id));
   };
 
   return (
@@ -112,9 +113,6 @@ const productView = () => {
               </InlineListItem>
               <InlineListItem>
                 <ListItemText primary="Aktív" secondary={currentProduct.active ? 'Igen' : 'Nem'} />
-              </InlineListItem>
-              <InlineListItem>
-                <ListItemText primary="Ár" secondary={currentProduct.price} />
               </InlineListItem>
               <InlineListItem>
                 <ListItemText primary="Gyártó" secondary={currentProduct.manufacturer?.name} />
