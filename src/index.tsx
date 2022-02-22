@@ -8,6 +8,7 @@ import { StoreContext } from 'storeon/react';
 import CustomSnackbar from './libraries/CustomSnackBar';
 import { AppStore } from './store';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 ReactDOM.render(
   <React.StrictMode>
     <StoreContext.Provider value={AppStore}>

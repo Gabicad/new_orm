@@ -37,6 +37,14 @@ export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store)
       console.error('Product Module Store InitProductsEvent');
     }
   });
+  store.on(ProductEventKeys.DeleteProductEvent, async (state, product: number) => {
+    try {
+      await productService.deleteProduct(product);
+      store.dispatch(ProductEventKeys.RemoveProductEvent, product);
+    } catch (e) {
+      console.error('Product Module Store InitProductsEvent');
+    }
+  });
 
   store.on(ProductEventKeys.InitProductsEvent, async (state) => {
     try {
@@ -85,7 +93,9 @@ export const ProductModule: StoreonModule<ProductState, ProductEvents> = (store)
   store.on(ProductEventKeys.LoadProductsEvent, (state, Products: IProductList[]) => ({
     products: Products
   }));
-
+  store.on(ProductEventKeys.RemoveProductEvent, (state, Product: number) => ({
+    products: [...state.products.filter((p) => p.id !== Product)]
+  }));
   store.on(ProductEventKeys.AddProductEvent, (state, Product: IProduct) => ({
     products: [...state.products, Product]
   }));

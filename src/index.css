@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.confirm-box {
+  z-index: 1000;
+  position: fixed!important;
+  left: 45%;
+  top: 45%;
+  width: 100%!important;
+  height: 100%!important;
+}

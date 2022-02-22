@@ -10,7 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import PageBar, { IPageBar } from '../../components/PageBar';
 import Dialog from '../../components/Dialog';
 import ProductForm from './form';
-import { IUser } from '../../models/User';
+import { confirm } from 'react-confirm-box';
+
 const products = () => {
   const { dispatch, products } = useStoreon<ProductState, ProductEvents>('products');
   const history = useNavigate();
@@ -31,14 +32,21 @@ const products = () => {
       }
     },
     {
-      title: 'Módosítás',
-      icon: Edit,
-      onClick: (item: IProductList) => {}
-    },
-    {
       title: 'Törlés',
       icon: Delete,
-      onClick: (item: IProductList) => console.log(typeof item)
+      onClick: async (item: IProductList) => {
+        const result = await confirm('Biztos benne hogy törli?', {
+          labels: {
+            confirmable: 'Igen',
+            cancellable: 'Nem'
+          }
+        });
+        if (result) {
+          dispatch(ProductEventKeys.DeleteProductEvent, item.id);
+          return;
+        }
+        return;
+      }
     }
   ];
 

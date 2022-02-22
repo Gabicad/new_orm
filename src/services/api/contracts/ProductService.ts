@@ -9,6 +9,7 @@ export interface IProductApiClient {
   saveProduct(product: FormData): Promise<IProduct | undefined>;
   getProduct(id: number): Promise<IProduct | undefined>;
   deleteImage(id: number): Promise<boolean | undefined>;
+  deleteProduct(id: number): Promise<boolean | undefined>;
   updateProduct(product: IProduct): Promise<boolean | undefined>;
 }
 
@@ -65,6 +66,14 @@ export class ProductApiClient implements IProductApiClient {
       console.error(exception);
     }
   }
+  async deleteProduct(id: number): Promise<boolean | undefined> {
+    try {
+      const response = await this.ProductApiClient.delete<boolean>(`/Products/${id}`);
+      return response ? response : undefined;
+    } catch (exception) {
+      console.error(exception);
+    }
+  }
 
   async getLastModifyDateTime(): Promise<Date | undefined> {
     try {
@@ -109,6 +118,10 @@ export default class ProductService {
   }
   async deleteImage(id: number): Promise<boolean | undefined> {
     const response = await this.ProductApiClient.deleteImage(id);
+    return response;
+  }
+  async deleteProduct(id: number): Promise<boolean | undefined> {
+    const response = await this.ProductApiClient.deleteProduct(id);
     return response;
   }
   async saveProduct(product: FormData): Promise<IProduct | undefined> {

@@ -16,16 +16,18 @@ import {
   IconButton,
   Icon
 } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import { InlineList, InlineListItem } from './../../libraries/InlineList';
 import parse from 'html-react-parser';
-import { Edit, AddCircle, DeleteForever } from '@mui/icons-material';
+import { Edit, AddCircle, DeleteForever, Delete } from '@mui/icons-material';
 import { IProduct, IProductFeature, IProductImages } from '../../models/Product';
 import { getImageSrc } from '../../libraries/ImageSrc';
 import PageBar, { IPageBar } from '../../components/PageBar';
-import SimpleTable from '../../components/SimpleTable/SimpleTable';
 import OfferForProduct from '../offers/utils/OffersForProduct';
 import Dialog from '../../components/Dialog';
 import ProductForm from './form';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { confirm } from 'react-confirm-box';
 const productView = () => {
   const [openEdit, setOpenEdit] = useState<boolean>(false);
   const [productEdit, setProductEdit] = useState<IProduct | undefined>(undefined);
@@ -64,6 +66,25 @@ const productView = () => {
           setModalTitle('Módosítás');
           setProductEdit(item);
           setOpenEdit(!openEdit);
+        }
+      },
+      {
+        icon: Delete,
+        title: 'Törlés',
+        color: 'error',
+        onClick: async (item: IProduct | undefined) => {
+          const result = await confirm('Biztos benne hogy törli?', {
+            labels: {
+              confirmable: 'Igen',
+              cancellable: 'Nem'
+            }
+          });
+          if (result) {
+            if (item?.id) dispatch(ProductEventKeys.DeleteProductEvent, item.id);
+            history('Products/List');
+            return;
+          }
+          return;
         }
       }
     ]
@@ -164,7 +185,7 @@ const productView = () => {
                         <IconButton
                           onClick={() => handleDelete(item)}
                           sx={{ color: 'rgba(255, 255, 255, 0.54)' }}>
-                          <Icon>DeleteForever</Icon>
+                          <DeleteForeverIcon />
                         </IconButton>
                       }
                     />
